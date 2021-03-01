@@ -12,8 +12,6 @@
 **nr indeksu:** 113112\
 **--------------**
 
-**kierunek:** informatyka stosowana
-
-**semestr:** 6
-
+**kierunek:** informatyka stosowana\
+**semestr:** 6\
 **grupa:** 2
