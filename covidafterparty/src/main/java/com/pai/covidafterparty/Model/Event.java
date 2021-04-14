@@ -19,6 +19,9 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long eventID;
+
+    @ManyToOne
+    @JoinColumn(name="owner_id", nullable=false)
     private User owner;
 
     @ManyToMany
@@ -50,6 +53,9 @@ public class Event {
     private int ageRestriction;
     private boolean openEvent;
 
+    @OneToMany(mappedBy = "event")
+    private List<Invitation> invitations;
 
-
+    @OneToMany(mappedBy = "event")
+    private List<Review> reviews;
 }

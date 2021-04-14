@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -29,6 +30,15 @@ public class User {
     private String phone;
     private boolean activeAccount;
 
+    @OneToMany(mappedBy = "owner")
+    private List<Event> ownedEvents;
+
+    @OneToOne(mappedBy = "inviter")
+    private Invitation invitationSent;
+
+    @OneToMany(mappedBy = "invited")
+    private List<Invitation> invitationsReceived;
+
     @ManyToMany(mappedBy = "moderators")
     @JsonIgnore
     private List<Event> moderating;
@@ -38,6 +48,9 @@ public class User {
             joinColumns = @JoinColumn(name="userID"),
             inverseJoinColumns = @JoinColumn(name="roleID"))
     private Set<Role> roles=new HashSet<>();
+
+    @OneToMany(mappedBy = "reviewer")
+    private List<Review> reviews;
 
     public User(String name, String lastName, String email, String password, LocalDate birthdate, String city, String phone) {
         this.name = name;
