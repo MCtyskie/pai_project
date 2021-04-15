@@ -3,15 +3,19 @@ import React from 'react';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import "./login.css"
+  
 
 class Login extends React.Component{
 	constructor(props) {
 		super(props);
 		this.state = {
             isLogged: false,
-            username : '',
+            email : '',
 			password : '',
+            validated: false,
 		}
+        this.handleChange = this.handleChange.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
 	}
 
 	componentDidMount() {
@@ -29,34 +33,49 @@ class Login extends React.Component{
 
     handleLogin(event){
         event.preventDefault();
-        const backend_url = "http://localhost:8081/login";
-        axios.post(backend_url, {
-            username: this.state.username,
-            password: this.state.password,
-        }).then(response =>{
-            console.log(response.data);
-            (response.status == 200) ? this.setState({ isLogged: true }) : this.setState({ isLogged: false})
-        }).catch(err =>{
-            console.log("failed to login");
-            console.log(err);
-        })
+        const form = event.currentTarget;
+        console.log(form);
+        console.log(form.checkValidity());
+        if (form.checkValidity() === false) {
+            event.stopPropagation();
+        }
+        else{
+            this.setState({validated: true});
+            const backend_url = "http://localhost:8081/login";
+            axios.post(backend_url, {
+                username: this.state.username,
+                password: this.state.password,
+            }).then(response =>{
+                console.log(response.data);
+                (response.status == 200) ? this.setState({ isLogged: true }) : this.setState({ isLogged: false})
+            }).catch(err =>{
+                console.log("failed to login");
+                console.log(err);
+            })
+        }
     }
 
 	render() {
         let loginForm;
 		if (this.state.isLogged === false) {
 			loginForm =
-				(<Form className="form-container">
+				(<Form className="form-container" validated={this.state.validated} onSubmit={this.handleLogin}>
 					<Form.Group controlId="formBasicEmail">
-						<Form.Label>Username</Form.Label>
-						<Form.Control type="text" name="username" onChange={this.handleChange} placeholder="Enter username" />
+						<Form.Label>Email</Form.Label>
+						<Form.Control required type="text" name="email" onChange={this.handleChange} placeholder="Enter Email" />
+                        <Form.Control.Feedback type="invalid">
+                            Please input a valid email.
+                        </Form.Control.Feedback>
 					</Form.Group>
 
 					<Form.Group controlId="formBasicPassword">
 						<Form.Label>Password</Form.Label>
-						<Form.Control type="password" name="password" onChange={this.handleChange} placeholder="Password" />
-					</Form.Group>
-                    <Button variant="primary" className="submit-btn" type="submit" onClick={this.handleLogin}>
+						<Form.Control required type="password" name="password" onChange={this.handleChange} placeholder="Password" />
+                        <Form.Control.Feedback type="invalid">
+                            Please input a valid password.
+                        </Form.Control.Feedback>
+                    </Form.Group>
+                    <Button variant="primary" className="submit-btn" type="submit">
                         Login
                     </Button>
 				</Form>);
