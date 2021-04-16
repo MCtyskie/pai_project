@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
 import {Toolbar} from './components/Toolbar';
+import {ProfileMenu} from './components/Profile';
+import {WelcomeMenu} from './components/Welcome';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Route} from "react-router-dom";
+import { EventView } from './components/EventView';
+import { Login } from './components/Login';
 
 class App extends Component{
 
@@ -22,6 +26,10 @@ class App extends Component{
 		<div>
 			<BrowserRouter>
 				<Toolbar/>
+				<Route exact path="/" component={WelcomeMenu} />
+				<Route path="/login" component={Login} />
+				<Route path="/profile" component={ProfileMenu} />
+				<Route path="/events" component={EventView} />
 			</BrowserRouter>
 		</div>
 		);

@@ -1,0 +1,17 @@
+.login-container{
+    display: flex;
+    padding: 5px;
+    justify-content: center;
+}
+
+.form-container{
+    min-width: 400px;
+    margin: 10px;
+    padding: 20px;;
+    border:2px solid grey;
+    border-radius: 5px;
+}
+
+.submit-btn{
+    width: 100%;
+}
