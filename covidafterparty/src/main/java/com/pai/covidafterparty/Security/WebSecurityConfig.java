@@ -1,5 +1,8 @@
-package com.pai.covidafterparty.Service;
+package com.pai.covidafterparty.Security;
 
+import com.pai.covidafterparty.Security.Jwt.AuthEntryPointJwt;
+import com.pai.covidafterparty.Security.Jwt.AuthTokenFilter;
+import com.pai.covidafterparty.Security.Service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        autenticationManagerBuilder.userDetailsSErvice(userDetailsService).passwordEncoder(passwordEncoder()) ;
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()) ;
     }
 
     @Bean

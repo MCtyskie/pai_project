@@ -1,4 +1,4 @@
-package com.pai.covidafterparty.Jwt.Response;
+package com.pai.covidafterparty.Security.Response;
 
 import java.util.List;
 
@@ -51,5 +51,9 @@ public class JwtResponse {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public List<String> getRoles() {
+        return roles;
     }
 }
