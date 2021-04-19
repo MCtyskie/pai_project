@@ -6,7 +6,10 @@ import com.pai.covidafterparty.Repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -29,15 +32,20 @@ public class EventService {
         return null;
     }
 
-    public String deleteEvent(long eventID){
+    public boolean deleteEvent(long eventID){
         Optional<Event> selectedEvent=eventRepository.findEventByEventID(eventID);
         if(selectedEvent.isPresent()){
-            Event event=selectedEvent.get();
-            String message=String.format("Event with id: %d deleted",event.getEventID());
-            eventRepository.delete(event);
-            return message;
+            eventRepository.delete(selectedEvent.get());
+            return true;
+        } else {
+            return false;
         }
-        return "";
+    }
+
+    public List<Event.EventItemJSON> getEvents(){
+        List<Event> resultList = new ArrayList<>();
+        eventRepository.findAll().forEach(resultList::add);
+        return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
     }
 
 
