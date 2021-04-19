@@ -3,6 +3,8 @@ package com.pai.covidafterparty.Service;
 import com.pai.covidafterparty.Model.User;
 import com.pai.covidafterparty.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,6 +14,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    /*
     public User addUser(User user){
         User u=userRepository.findUserByEmail(user.getEmail()).orElse(null);
         if(u==null){
@@ -23,6 +26,7 @@ public class UserService {
     public Optional<User> getUserById(long userID){
         return userRepository.findUserByUserID(userID);
     }
+
     public Optional<User> getUserByEmail(String email){
         return userRepository.findUserByEmail(email);
     }
@@ -34,16 +38,44 @@ public class UserService {
         }
         return null;
     }
-
-    public String deleteUser(long userID){
-        Optional<User> selectedUser=userRepository.findUserByUserID(userID);
-        if(selectedUser.isPresent()){
-            User user=selectedUser.get();
-            String message=String.format("User with id: %d deleted",user.getUserID());
-            userRepository.delete(user);
-            return message;
+     */
+    public boolean addUser(User user){
+        User u=userRepository.findUserByEmail(user.getEmail()).get();
+        if(u==null){
+            userRepository.save(user);
+            return true;
         }
-        return "";
+        return false;
     }
 
+    public boolean getUserById(long userID){
+        if(userRepository.findUserByUserID(userID).isPresent()){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean getUserByEmail(String email){
+        if(userRepository.findUserByEmail(email).isPresent()){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateUser(User user){
+        User u=userRepository.findUserByEmail(user.getEmail()).get();
+        if(u!=null){
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+    public boolean deleteUser(long userID){
+        User u=userRepository.findUserByUserID(userID).get();
+        if(u!=null){
+            userRepository.delete(u);
+            return true;
+        }
+        return false;
+    }
 }
