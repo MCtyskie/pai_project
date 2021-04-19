@@ -1,11 +1,15 @@
 package com.pai.covidafterparty.Controller;
 
-import com.nimbusds.oauth2.sdk.Response;
-import com.pai.covidafterparty.Jwt.Response.JwtResponse;
+import com.pai.covidafterparty.Security.Request.LoginRequest;
+import com.pai.covidafterparty.Security.Request.SignupRequest;
+import com.pai.covidafterparty.Security.Response.JwtResponse;
 import com.pai.covidafterparty.Model.Role;
 import com.pai.covidafterparty.Model.User;
 import com.pai.covidafterparty.Repository.RoleRepository;
 import com.pai.covidafterparty.Repository.UserRepository;
+import com.pai.covidafterparty.Security.Jwt.JwtUtils;
+import com.pai.covidafterparty.Security.Response.MessageResponse;
+import com.pai.covidafterparty.Security.Service.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,14 +55,14 @@ public class AuthController {
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getUserID(),
-                userDetails.getEmail(),
+                userDetails.getUsername(),
                 userDetails.getLastName(),
                 roles));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest){
-        if(userRepository.findUserByEmail(signupRequest.getEmail())){
+        if(userRepository.existsUserByEmail(signupRequest.getEmail())){
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
