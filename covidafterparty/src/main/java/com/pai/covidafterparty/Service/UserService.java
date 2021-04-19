@@ -48,11 +48,9 @@ public class UserService {
         return false;
     }
 
-    public boolean getUserById(long userID){
-        if(userRepository.findUserByUserID(userID).isPresent()){
-            return true;
-        }
-        return false;
+    public Optional<User> getUserById(long userID){
+        Optional<User> user = userRepository.findUserByUserID(userID);
+        return user;
     }
 
     public boolean getUserByEmail(String email){
@@ -78,4 +76,12 @@ public class UserService {
         }
         return false;
     }
+
+    public User.UserProfileJSON getUserProfileJSON(long id){
+        Optional<User> user = userRepository.findUserByUserID(id);
+        if(user.isPresent()) return user.get().getUserProfileJSON();
+        else return null;
+    }
+
+
 }

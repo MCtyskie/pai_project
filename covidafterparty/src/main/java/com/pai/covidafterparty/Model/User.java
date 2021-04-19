@@ -1,9 +1,7 @@
 package com.pai.covidafterparty.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -61,4 +59,37 @@ public class User {
         this.city = city;
         this.phone = phone;
     }
+
+    public UserProfileJSON getUserProfileJSON(){
+        return new UserProfileJSON(name, lastName, email, city, phone, userID);
+    }
+
+    @Getter
+    @Setter
+    public static class UserProfileJSON{
+        private long userID;
+        private String name;
+        private String lastName;
+        private String email;
+        private String city;
+        private String phone;
+
+        public UserProfileJSON(String name, String lastName, String email, String city, String phone, long userID) {
+            this.userID = userID;
+            this.name = name;
+            this.lastName = lastName;
+            this.email = email;
+            this.city = city;
+            this.phone = phone;
+        }
+
+        public UserProfileJSON(){
+            this.name = null;
+            this.lastName = null;
+            this.email = null;
+            this.city = null;
+            this.phone = null;
+        }
+    }
+
 }

@@ -3,9 +3,7 @@ package com.pai.covidafterparty.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pai.covidafterparty.Enums.Activity;
 import com.pai.covidafterparty.Enums.Visibility;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -58,4 +56,80 @@ public class Event {
 
     @OneToMany(mappedBy = "event")
     private List<Review> reviews;
+
+    public EventItemJSON getEvenItemJSON(){
+        return new EventItemJSON(title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, images);
+    }
+
+    public EventDetailsJSON getEvenDetailsJSON(){
+        return new EventDetailsJSON(title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, images, activity, visibility, openEvent);
+    }
+
+    @Getter
+    @Setter
+    public static class EventItemJSON{
+        private String title;
+        private LocalDateTime eventDate;
+
+        private String city;
+        private String postNumber;
+        private String street;
+        private String houseNumber;
+        private String apartmentNumber;
+
+        private int ageRestriction;
+        private int maxGuests;
+        private String tags;
+
+        private String images;
+
+        public EventItemJSON(String title, LocalDateTime eventDate, String city, String postNumber, String street, String houseNumber, String apartmentNumber, int ageRestriction, int maxGuests, String tags, String images) {
+            this.title = title;
+            this.eventDate = eventDate;
+            this.city = city;
+            this.postNumber = postNumber;
+            this.street = street;
+            this.houseNumber = houseNumber;
+            this.apartmentNumber = apartmentNumber;
+            this.ageRestriction = ageRestriction;
+            this.maxGuests = maxGuests;
+            this.tags = tags;
+            this.images = images;
+        }
+
+        public EventItemJSON(){
+            this.title = null;
+            this.eventDate = null;
+            this.city = null;
+            this.postNumber = null;
+            this.street = null;
+            this.houseNumber = null;
+            this.apartmentNumber = null;
+            this.ageRestriction = -1;
+            this.maxGuests = -1;
+            this.tags = null;
+            this.images = null;
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class EventDetailsJSON extends EventItemJSON{
+        private Activity activity;
+        private Visibility visibility;
+        private boolean openEvent;
+
+        public EventDetailsJSON(String title, LocalDateTime eventDate, String city, String postNumber, String street, String houseNumber, String apartmentNumber, int ageRestriction, int maxGuests, String tags, String images, Activity activity, Visibility visibility, boolean openEvent) {
+            super(title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, images);
+            this.activity = activity;
+            this.visibility = visibility;
+            this.openEvent = openEvent;
+        }
+
+        public EventDetailsJSON() {
+            super();
+            this.activity = null;
+            this.visibility = null;
+        }
+    }
 }
