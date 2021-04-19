@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Route} from "react-router-dom";
 import { EventView } from './components/EventView';
 import { Login } from './components/Login';
+import { Signup } from './components/Signup';
 
 class App extends Component{
 
@@ -27,6 +28,7 @@ class App extends Component{
 			<BrowserRouter>
 				<Toolbar/>
 				<Route exact path="/" component={WelcomeMenu} />
+				<Route path="/signup" component={Signup} />
 				<Route path="/login" component={Login} />
 				<Route path="/profile" component={ProfileMenu} />
 				<Route path="/events" component={EventView} />
