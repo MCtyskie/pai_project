@@ -2,6 +2,7 @@ package com.pai.covidafterparty.Security.Request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Set;
@@ -22,7 +23,7 @@ public class SignupRequest {
     @Size(min = 6, max = 40)
     private String password;
 
-    @NotBlank
+    @Past
     private LocalDate birthdate;
 
     @NotBlank
