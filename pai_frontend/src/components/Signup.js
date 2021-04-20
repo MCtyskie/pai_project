@@ -45,10 +45,15 @@ class Signup extends React.Component {
         }
         else {
             this.setState({ validated: true });
-            const backend_url = "http://localhost:8081/signup";
+            const backend_url = "http://localhost:8081/api/auth/signup";
             axios.post(backend_url, {
-                username: this.state.username,
+                name: this.state.name,
+                lastName: this.state.lastName,
+                email: this.state.email,
                 password: this.state.password,
+                birthdate: this.state.birthdate,
+                city: this.state.city,
+                phone: this.state.phone,
             }).then(response => {
                 console.log(response.data);
                 (response.status == 200) ? this.setState({ isLogged: true }) : this.setState({ isLogged: false })

@@ -42,9 +42,9 @@ class Login extends React.Component {
         }
         else {
             this.setState({ validated: true });
-            const backend_url = "http://localhost:8081/login";
+            const backend_url = "http://localhost:8081/api/auth/signin";
             axios.post(backend_url, {
-                username: this.state.username,
+                email: this.state.email,
                 password: this.state.password,
             }).then(response => {
                 console.log(response.data);
