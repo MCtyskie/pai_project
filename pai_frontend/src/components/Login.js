@@ -47,8 +47,9 @@ class Login extends React.Component {
                 email: this.state.email,
                 password: this.state.password,
             }).then(response => {
-                console.log(response.data);
+                console.log(response.data.accessToken);
                 (response.status == 200) ? this.setState({ isLogged: true }) : this.setState({ isLogged: false })
+                this.props.history.push("/");
             }).catch(err => {
                 console.log("failed to login");
                 console.log(err);
@@ -58,6 +59,7 @@ class Login extends React.Component {
 
     render() {
         let loginForm;
+        let signupForm;
         if (this.state.isLogged === false) {
             loginForm =
                 (<Form className="form-container" validated={this.state.validated} onSubmit={this.handleLogin}>
@@ -81,17 +83,20 @@ class Login extends React.Component {
                         Login
                     </Button>
                 </Form>);
+
+            signupForm = (
+                    <Link to="/signup">
+                        <Button variant="primary" className="submit-btn">
+                        Signup now!
+                        </Button>
+                    </Link>
+            );
         }
         return (
             <div className="login-container">
                 {loginForm}
                 <div className="form-container">
-                    <h3>Don't have an account? Click here!</h3>
-                    <Link to="/signup">
-                        <Button variant="primary" className="submit-btn">
-                            Signup now!
-                        </Button>
-                    </Link>
+                    {signupForm}
                 </div>
             </div>
         );

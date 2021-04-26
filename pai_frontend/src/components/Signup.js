@@ -99,6 +99,14 @@ class Signup extends React.Component {
                         </Form.Control.Feedback>
                 </Form.Group>
 
+                <Form.Group controlId="formBasicBirthdate">
+                    <Form.Label>Birthdate</Form.Label>
+                    <Form.Control required type="date" name="birthdate" onChange={this.handleChange} />
+                    <Form.Control.Feedback type="invalid">
+                        Please input a valid date.
+                        </Form.Control.Feedback>
+                </Form.Group>
+
                 <Form.Group controlId="formBasicCity">
                     <Form.Label>City</Form.Label>
                     <Form.Control required type="text" name="city" onChange={this.handleChange} />
@@ -109,7 +117,7 @@ class Signup extends React.Component {
 
                 <Form.Group controlId="formBasicPhone">
                     <Form.Label>Phone number</Form.Label>
-                    <Form.Control required type="text" name="Phone" onChange={this.handleChange} />
+                    <Form.Control required type="text" name="phone" onChange={this.handleChange} />
                     <Form.Control.Feedback type="invalid">
                         Please input a valid phone number.
                         </Form.Control.Feedback>
