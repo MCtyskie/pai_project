@@ -51,6 +51,28 @@ public class Event {
     private int ageRestriction;
     private boolean openEvent;
 
+    public Event(User owner, String title, String city, String postNumber, String street,
+                 String houseNumber, String apartmentNumber, LocalDateTime eventDate,
+                 Activity activity, Visibility visibility, String tags, int maxGuests,
+                 String description, String images, int ageRestriction, boolean openEvent) {
+        this.owner = owner;
+        this.title = title;
+        this.city = city;
+        this.postNumber = postNumber;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.apartmentNumber = apartmentNumber;
+        this.eventDate = eventDate;
+        this.activity = activity;
+        this.visibility = visibility;
+        this.tags = tags;
+        this.maxGuests = maxGuests;
+        this.description = description;
+        this.images = images;
+        this.ageRestriction = ageRestriction;
+        this.openEvent = openEvent;
+    }
+
     @OneToMany(mappedBy = "event")
     private List<Invitation> invitations;
 

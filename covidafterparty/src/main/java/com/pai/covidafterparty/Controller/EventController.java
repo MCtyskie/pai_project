@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.parser.Entity;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,6 +68,9 @@ public class EventController {
         }
     }
 
-    
+    @GetMapping("/event/test1")
+    ResponseEntity<String> test1(Principal principal){
+        return new ResponseEntity<>(principal.getName(), HttpStatus.OK);
+    }
 
 }
