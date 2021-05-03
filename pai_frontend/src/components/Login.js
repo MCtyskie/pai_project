@@ -48,7 +48,7 @@ class Login extends React.Component {
                 password: this.state.password,
             }).then(response => {
                 console.log(response.data.accessToken);
-                (response.status == 200) ? this.setState({ isLogged: true }) : this.setState({ isLogged: false })
+                (response.status == 200) ? this.setState({ isLogged: true }, () => localStorage.setItem("token", JSON.stringify(response.data.accessToken))) : this.setState({ isLogged: false })
                 this.props.history.push("/");
             }).catch(err => {
                 console.log("failed to login");
@@ -85,11 +85,11 @@ class Login extends React.Component {
                 </Form>);
 
             signupForm = (
-                    <Link to="/signup">
-                        <Button variant="primary" className="submit-btn">
+                <Link to="/signup">
+                    <Button variant="primary" className="submit-btn">
                         Signup now!
                         </Button>
-                    </Link>
+                </Link>
             );
         }
         return (

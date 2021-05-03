@@ -1,12 +1,22 @@
 .event-container{
     display:flex;
+    flex-direction: column;
+    min-width: 800px;
+    align-items:center;
 }
 
 .event-display{
     display: flex;
-    justify-content: center;
     align-items:center;
     flex-direction: column;
+    min-width: 80%;
+    min-height: 400px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.event-display:hover{
+    background-color: lightgray;
 }
 
 .event-title{
@@ -34,4 +44,8 @@
 .event-lower-info{
     display: flex;
     
+}
+
+.checkbox:checked{
+    color:red;
 }

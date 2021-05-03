@@ -25,14 +25,14 @@ class Toolbar extends React.Component {
 						<Nav.Link href="/">Home</Nav.Link>
 						<NavDropdown title="Events" id="events">
 							<NavDropdown.Item key="1" href="/events" title="list_events">Show Events</NavDropdown.Item>
-							<NavDropdown.Item key="2" href="/event" title="add_event">Add Event</NavDropdown.Item>
+							<NavDropdown.Item key="2" href="/add_event" title="add_event">Add Event</NavDropdown.Item>
 						</NavDropdown>
 						<NavDropdown title="My Profile" id="profile">
 							<NavDropdown.Item key="3" href="/profile" title="view_profile">View Profile</NavDropdown.Item>
 						</NavDropdown>
 					</Nav>
 					<Nav>
-						<Nav.Link href="/login">Login</Nav.Link>
+						{localStorage.getItem('token') ? <Nav.Link href="/login">Login</Nav.Link> : <Nav.Link href="/logout">Logout</Nav.Link>}
 					</Nav>
 				</Navbar.Collapse>
 			</Navbar>

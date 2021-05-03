@@ -10,12 +10,13 @@ class EventDetails extends React.Component {
 	}
 
 	componentDidMount() {
+		console.log(this.props.location.query.eventItem);
 	}
 
 	render() {
 		return (
 			<div>
-                
+                welcome
             </div>
         );
 	}
