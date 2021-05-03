@@ -13,14 +13,15 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
-    private static final Logger logger= LoggerFactory.getLogger(JwtUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${pai.cap.jwtSecret}")
     private String jwtSecret;
     @Value("${pai.cap.jwtExpirationMs}")
     private int jwtExpirationMs;
-    public String generateJwtToken(Authentication authentication){
-        UserDetailsImpl userPrincipal=(UserDetailsImpl) authentication.getPrincipal();
+
+    public String generateJwtToken(Authentication authentication) {
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
@@ -30,12 +31,12 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String getUserNameFromJwtToken(String token){
+    public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public boolean validateJwtToken(String authToken){
-        try{
+    public boolean validateJwtToken(String authToken) {
+        try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {

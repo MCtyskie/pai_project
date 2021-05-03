@@ -1,7 +1,7 @@
 package com.pai.covidafterparty.Security.Service;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pai.covidafterparty.Model.User;
-import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

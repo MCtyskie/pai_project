@@ -11,17 +11,19 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api/event")
 public class EventController {
     @Autowired
     EventService eventService;
 
-    @GetMapping("/event/events")
+    @GetMapping("/events")
     ResponseEntity<List<Event.EventItemJSON>> getEvents(){
         return new ResponseEntity<List<Event.EventItemJSON>>(eventService.getEvents(), HttpStatus.OK);
     }
 
-    @GetMapping("/event/details")
+    @GetMapping("/details")
     ResponseEntity<Event.EventDetailsJSON> getEventDetails(@RequestParam long eventID){
         Optional<Event> event = eventService.getEventById(eventID);
         if(event.isPresent()){
@@ -31,7 +33,7 @@ public class EventController {
         }
     }
 
-    @PutMapping("event/edit")
+    @PutMapping("/edit")
     ResponseEntity<String> editEvent(@RequestBody Event.EventDetailsJSON eventDetails, @RequestParam long eventID){
         Optional<Event> eventOptional = eventService.getEventById(eventID);
         if(eventOptional.isPresent()){
@@ -59,7 +61,7 @@ public class EventController {
         }
     }
 
-    @DeleteMapping("/event/delete")
+    @DeleteMapping("/delete")
     ResponseEntity<String> deleteEvent(@RequestParam long eventID){
         if(eventService.deleteEvent(eventID)){
             return new ResponseEntity<String>("Event deleted", HttpStatus.OK);
@@ -68,7 +70,7 @@ public class EventController {
         }
     }
 
-    @GetMapping("/event/test1")
+    @GetMapping("/test1")
     ResponseEntity<String> test1(Principal principal){
         return new ResponseEntity<>(principal.getName(), HttpStatus.OK);
     }
