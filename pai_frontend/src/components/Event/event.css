@@ -8,7 +8,6 @@
 .event-display{
     display: flex;
     align-items:center;
-    flex-direction: column;
     min-width: 80%;
     min-height: 400px;
     flex-wrap: wrap;
@@ -21,9 +20,11 @@
 
 .event-title{
     width:80%;
-    padding:5px;
+    padding:20px;
     margin-top: 10px;
     margin-bottom: 10px;
+    font-size: large;
+    font-weight: bold;
 }
 
 .row-container{
@@ -49,3 +50,20 @@
 .checkbox:checked{
     color:red;
 }
+
+
+a{
+    text-decoration: none;
+}
+
+a:focus, a:hover, a:visited, a:link, a:active {
+    text-decoration: none;
+}
+
+/* EVENT DETAILS CSS */
+
+.event-details-container{
+    display:flex;
+    flex-direction: column;
+}
+

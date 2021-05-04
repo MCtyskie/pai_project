@@ -51,6 +51,7 @@ class EventView extends React.Component {
 					"invitationsAccepted": "23",
 					"maxGuests": "100",
 					"picture": "JPG",
+					"description":"witajcie na testowym evencie melo inferno jak sie macie panowie haha",
 				},
 				{
 					"title": "meloinferno",
@@ -60,6 +61,7 @@ class EventView extends React.Component {
 					"invitationsAccepted": "0",
 					"maxGuests": "100",
 					"picture": "JPG",
+					"description":"Drugi testowy event",
 				}
 			], isFetchingData: false
 		}, () => console.log(this.state.eventList));
@@ -94,7 +96,7 @@ class EventView extends React.Component {
 		if (this.state.eventList.length !== 0) {
 			for (const eventItem of this.state.eventList) {
 				eventPage.push(
-					<Link to ={{pathname: "/event", query: {eventItem}}} style={{ textDecoration: 'none' }}>
+					<Link to={{ pathname: "/event", query: { eventItem } }}>
 						<EventCard item={eventItem}></EventCard>
 					</Link>
 				)
