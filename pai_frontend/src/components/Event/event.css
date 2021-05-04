@@ -71,5 +71,21 @@ a:focus, a:hover, a:visited, a:link, a:active {
 
 .event-filter-container{
     display:flex;
+    width:80%;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.button-container{
+    display:flex;
     flex-direction: row;
+    width:80%;
+    flex-direction: row-reverse;
+}
+
+.filter-button{
+    display:flex;
+    margin:5px;
 }

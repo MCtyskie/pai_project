@@ -4,12 +4,12 @@ import {ProfileMenu} from './components/Profile';
 import {WelcomeMenu} from './components/Welcome';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Route} from "react-router-dom";
-import { EventView } from './components/Event/EventView';
 import { Login } from './components/Login';
 import { Signup } from './components/Signup';
 import { Logout } from './components/Logout';
 import { AddEvent } from './components/Event/AddEvent';
 import { EventDetails } from './components/Event/EventDetails';
+import { EventView } from './components/Event/EventView';
 
 class App extends Component{
 

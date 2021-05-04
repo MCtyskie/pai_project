@@ -1,43 +1,69 @@
-import React from 'react';
+import DateFnsUtils from '@date-io/date-fns';
+import { TextField } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import {
+	KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider
+} from '@material-ui/pickers';
 import axios from 'axios';
-import "./event.css"
-import EventCard from './EventCard';
-import { Link } from "react-router-dom";
-import { EventFilter } from './EventFilter';
+import React from 'react';
+import Button from 'react-bootstrap/Button';
+import "./event.css";
+import { EventListing } from './EventListing';
+
 
 class EventView extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isFetchingData: false,
-			eventList: [],
+			cities: [],
+			tags: [],
+			selected_city: null,
+			selected_tags: null,
+			event_start_date: null,
+			event_end_date: null,
+			event_time_start: null,
+			event_time_end: null,
+			eventList:[],
 		}
+		this.fetchAllCities = this.fetchAllCities.bind(this);
+		this.fetchTags = this.fetchTags.bind(this);
 		this.fetchAllEvents = this.fetchAllEvents.bind(this);
+		this.handleReset = this.handleReset.bind(this);
 		this.dummyEvents = this.dummyEvents.bind(this);
-		this.prepareTable = this.prepareTable.bind(this);
 	}
 
 	componentDidMount() {
-		console.log("Loaded Event views");
 		this.fetchAllEvents();
+		// Endpoint for fetching all cities?
+		this.fetchAllCities();
+		// Endpoint for fetching possible tags? or join them together somehow so data is dict {'tags':[], 'cities':[],..}
+		this.fetchTags();
 	}
 
 	fetchAllEvents() {
 		// this.setState({ isFetchingData: true });
-		// const backend_url = "http://localhost:8081/api/event/events";
-		// axios.get(backend_url, {
-		// 	headers: {
-		// 		"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0,-1)}`,
-		// 	}
-		// })
-		// 	.then(response => {
-		// 		this.setState({ eventList: response.data, isFetchingData: false });
-		// 	})
-		// 	.catch(err => {
-		// 		console.log(err);
-
-		// 		this.setState({ isFetchingData: false });
-		// 	})
+		const backend_url = "http://localhost:8081/api/event/events";
+		axios.get(backend_url, {
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0,-1)}`,
+			},
+			params: {
+				city: this.state.selected_city,
+				tags: this.state.selected_tags,
+				date_start: this.state.event_start_date,
+				date_end: this.state.event_end_date,
+				time_start: this.state.event_time_start,
+				time_end: this.state.event_time_end,
+			}
+		})
+			.then(response => {
+				console.log(response.data);
+				// this.setState({ eventList: response.data, isFetchingData: false });
+				this.setState({ eventList: response.data});
+			})
+			.catch(err => {
+				console.log(err);
+			})
 		this.dummyEvents();
 	}
 
@@ -52,7 +78,7 @@ class EventView extends React.Component {
 					"invitationsAccepted": "23",
 					"maxGuests": "100",
 					"picture": "JPG",
-					"description":"witajcie na testowym evencie melo inferno jak sie macie panowie haha",
+					"description": "witajcie na testowym evencie melo inferno jak sie macie panowie haha",
 				},
 				{
 					"title": "meloinferno",
@@ -62,56 +88,159 @@ class EventView extends React.Component {
 					"invitationsAccepted": "0",
 					"maxGuests": "100",
 					"picture": "JPG",
-					"description":"Drugi testowy event",
+					"description": "Drugi testowy event",
 				}
 			], isFetchingData: false
-		}, () => console.log(this.state.eventList));
+		});
 	}
 
-	prepareTable() {
-		let eventPage = [];
-		// if (this.state.eventList.length !== 0) {
-		// 	let headers = Object.values(this.state.eventList)[0];
-		// 	let header = Object.keys(headers);
-
-		// 	eventPage =
-		// 		(<Table responsive>
-		// 			<thead>
-		// 				<tr>
-		// 					{header.map((k, i) => <th key={i}>{k}</th>)}
-		// 				</tr>
-		// 			</thead>
-		// 			<tbody>
-		// 				{
-		// 					this.state.eventList.map((r, i) => (
-		// 						<tr key={i}>{
-		// 							Object.values(r).map((resval, j) => <td key={j}>{resval.toString()}</td>)
-		// 						}
-		// 						</tr>
-		// 					))
-		// 				}
-		// 			</tbody>
-		// 		</Table>)
-		// }
-		// return eventPage;
-		if (this.state.eventList.length !== 0) {
-			for (const eventItem of this.state.eventList) {
-				eventPage.push(
-					<Link to={{ pathname: "/event", query: { eventItem } }}>
-						<EventCard item={eventItem}></EventCard>
-					</Link>
-				)
-			}
-		}
-
-		return eventPage
+	fetchAllCities() {
+		// const backend_url = "http://localhost:8081/api/event/cities";
+		// axios.get(backend_url, {
+		// 	headers: {
+		// 		"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
+		// 	}
+		// })
+		// 	.then(response => {
+		// 		this.setState({ cities: response.data});
+		// 	})
+		// 	.catch(err => {
+		// 		console.log(err);
+		// 	})
+		let dummy_data = [
+			"Bydgoszcz",
+			"Wrocław",
+			"Gdańsk",
+			"Łódź",
+		];
+		this.setState({ cities: dummy_data });
 	}
+
+	fetchTags() {
+		// const backend_url = "http://localhost:8081/api/event/tags";
+		// axios.get(backend_url, {
+		// 	headers: {
+		// 		"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
+		// 	}
+		// })
+		// 	.then(response => {
+		// 		this.setState({ tags: response.data});
+		// 	})
+		// 	.catch(err => {
+		// 		console.log(err);
+		// 	})
+		let dummy_data = [
+			"Rave",
+			"Rock",
+			"Dance",
+		];
+		this.setState({ tags: dummy_data });
+	}
+
+
+	handleReset() {
+		this.setState({ selected_city: null, selected_tags: null, event_start_date: null, event_end_date: null, event_time_start: null, event_time_end: null })
+	}
+
 
 	render() {
 		return (
+			// Filter by tags, city, date, name, agerestricted
 			<div className="event-container">
-				<EventFilter />
-				{this.state.isFetchingData ? "fetching data..." : this.prepareTable()}
+				<div className="event-filter-container">
+					<div className="row-container">
+						{/* Maybe add search here also? */}
+						<Autocomplete
+							id="city-filter"
+							options={this.state.cities}
+							value={this.state.selected_city}
+							onChange={(event, newValue) => {
+								this.setState({ selected_city: newValue });
+							}}
+							style={{ width: "20%" }}
+							renderInput={(params) => <TextField {...params} label="City" color="primary" variant={"outlined"} />}
+						/>
+						<Autocomplete
+							id="tags-filter"
+							options={this.state.tags}
+							value={this.state.selected_tags}
+							onChange={(event, newValue) => {
+								this.setState({ selected_tags: newValue });
+							}}
+							style={{ width: "20%" }}
+							renderInput={(params) => <TextField {...params} label="Tag" color="primary" variant={"outlined"} />}
+						/>
+					</div>
+					<div className="row-container">
+						<MuiPickersUtilsProvider utils={DateFnsUtils}>
+							<KeyboardDatePicker
+								disableToolbar
+								variant="inline"
+								format="MM/dd/yyyy"
+								margin="normal"
+								id="event-date-start"
+								label="Event Date from:"
+								value={this.state.event_start_date}
+								onChange={(event, newValue) => {
+									this.setState({ event_start_date: newValue });
+								}}
+								KeyboardButtonProps={{
+									'aria-label': 'change date',
+								}}
+							/>
+							<KeyboardDatePicker
+								disableToolbar
+								variant="inline"
+								format="MM/dd/yyyy"
+								margin="normal"
+								id="event-date-end"
+								label="Event Date to:"
+								value={this.state.event_end_date}
+								onChange={(event, newValue) => {
+									this.setState({ event_end_date: newValue });
+								}}
+								KeyboardButtonProps={{
+									'aria-label': 'change date',
+								}}
+							/>
+							<KeyboardTimePicker
+								variant="inline"
+								margin="normal"
+								id="event-time-start"
+								label="Time from"
+								value={this.state.event_time_start}
+								onChange={(event, newValue) => {
+									this.setState({ event_time_start: newValue });
+								}}
+								KeyboardButtonProps={{
+									'aria-label': 'change time',
+								}}
+							/>
+							<KeyboardTimePicker
+								variant="inline"
+								margin="normal"
+								id="event-time-end"
+								label="Time to"
+								value={this.state.event_time_end}
+								onChange={(event, newValue) => {
+									this.setState({ event_time_end: newValue });
+								}}
+								KeyboardButtonProps={{
+									'aria-label': 'change time',
+								}}
+							/>
+						</MuiPickersUtilsProvider>
+					</div>
+					<div className="button-container">
+						<Button variant="secondary" className="filter-button" onClick={this.handleReset}>
+							Reset
+						</Button>
+						<Button variant="primary" className="filter-button" onClick={this.fetchAllEvents}>
+							Search
+						</Button>
+					</div>
+				</div>
+				<EventListing events={this.state.eventList}></EventListing>
 			</div>
 		);
 	}
