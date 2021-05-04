@@ -3,6 +3,7 @@ import axios from 'axios';
 import "./event.css"
 import EventCard from './EventCard';
 import { Link } from "react-router-dom";
+import { EventFilter } from './EventFilter';
 
 class EventView extends React.Component {
 	constructor(props) {
@@ -109,6 +110,7 @@ class EventView extends React.Component {
 	render() {
 		return (
 			<div className="event-container">
+				<EventFilter />
 				{this.state.isFetchingData ? "fetching data..." : this.prepareTable()}
 			</div>
 		);

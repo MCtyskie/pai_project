@@ -7,6 +7,7 @@ import {BrowserRouter, Route} from "react-router-dom";
 import { EventView } from './components/Event/EventView';
 import { Login } from './components/Login';
 import { Signup } from './components/Signup';
+import { Logout } from './components/Logout';
 import { AddEvent } from './components/Event/AddEvent';
 import { EventDetails } from './components/Event/EventDetails';
 
@@ -32,6 +33,7 @@ class App extends Component{
 				<Route exact path="/" component={WelcomeMenu} />
 				<Route path="/signup" component={Signup} />
 				<Route path="/login" component={Login} />
+				<Route path="/logout" component={Logout} />
 				<Route path="/profile" component={ProfileMenu} />
 				<Route path="/events" component={EventView} />
 				<Route path="/add_event" component={AddEvent} />

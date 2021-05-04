@@ -7,12 +7,18 @@ class Toolbar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-
+			authenticated: false,
 		}
+		this.setAuthentication=this.setAuthentication.bind(this);
 	}
 
 	componentDidMount() {
 		console.log("Loaded toolbar");
+		this.setAuthentication();
+	}
+
+	setAuthentication(){
+		localStorage.getItem('token') ? this.setState({authenticated: true}): this.setState({authenticated: false})
 	}
 
 	render() {
@@ -32,7 +38,7 @@ class Toolbar extends React.Component {
 						</NavDropdown>
 					</Nav>
 					<Nav>
-						{localStorage.getItem('token') ? <Nav.Link href="/login">Login</Nav.Link> : <Nav.Link href="/logout">Logout</Nav.Link>}
+						{this.state.authenticated ? <Nav.Link href="/logout">Logout</Nav.Link> : <Nav.Link href="/login">Login</Nav.Link>}
 					</Nav>
 				</Navbar.Collapse>
 			</Navbar>

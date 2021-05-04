@@ -67,3 +67,9 @@ a:focus, a:hover, a:visited, a:link, a:active {
     flex-direction: column;
 }
 
+/* EVENT FILTER CSS */
+
+.event-filter-container{
+    display:flex;
+    flex-direction: row;
+}
