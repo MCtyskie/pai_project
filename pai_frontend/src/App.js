@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Toolbar} from './components/Toolbar';
-import {ProfileMenu} from './components/Profile';
+import {ProfileView} from './components/Profile/ProfileView';
 import {WelcomeMenu} from './components/Welcome';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Route} from "react-router-dom";
@@ -34,10 +34,11 @@ class App extends Component{
 				<Route path="/signup" component={Signup} />
 				<Route path="/login" component={Login} />
 				<Route path="/logout" component={Logout} />
-				<Route path="/profile" component={ProfileMenu} />
+				<Route path="/profile" component={ProfileView} />
 				<Route path="/events" component={EventView} />
 				<Route path="/add_event" component={AddEvent} />
 				<Route path="/event" component={EventDetails} />
+				<Route path="/review" />
 			</BrowserRouter>
 		</div>
 		);
