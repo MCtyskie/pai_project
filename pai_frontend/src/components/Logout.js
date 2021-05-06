@@ -15,11 +15,9 @@ class Logout extends React.Component {
     }
 
     componentDidMount() {
-        console.log("Loaded Login Page");
         this.handleLogout();
     }
 
-    
 
     handleLogout() {
         localStorage.removeItem('token');

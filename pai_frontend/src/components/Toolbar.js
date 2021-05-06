@@ -1,25 +1,21 @@
 import React from 'react';
 import { Nav, NavDropdown } from 'react-bootstrap';
 import Navbar from 'react-bootstrap/Navbar'
+import AuthContext from './AuthContext';
 
 
 class Toolbar extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			authenticated: false,
 		}
-		this.setAuthentication=this.setAuthentication.bind(this);
 	}
 
 	componentDidMount() {
 		console.log("Loaded toolbar");
-		this.setAuthentication();
+		console.log(this.context.isAuthorized());
 	}
 
-	setAuthentication(){
-		localStorage.getItem('token') ? this.setState({authenticated: true}): this.setState({authenticated: false})
-	}
 
 	render() {
 		return (
@@ -38,7 +34,7 @@ class Toolbar extends React.Component {
 						</NavDropdown>
 					</Nav>
 					<Nav>
-						{this.state.authenticated ? <Nav.Link href="/logout">Logout</Nav.Link> : <Nav.Link href="/login">Login</Nav.Link>}
+						{this.context.isAuthorized() ? <Nav.Link href="/logout">Logout</Nav.Link> : <Nav.Link href="/login">Login</Nav.Link>}
 					</Nav>
 				</Navbar.Collapse>
 			</Navbar>
@@ -46,5 +42,7 @@ class Toolbar extends React.Component {
 		);
 	}
 }
+
+Toolbar.contextType = AuthContext
 
 export { Toolbar };

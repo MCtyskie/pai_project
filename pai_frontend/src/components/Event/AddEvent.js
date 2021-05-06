@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
+import AuthContext from './../AuthContext';
 
 
 class AddEvent extends React.Component {
@@ -160,10 +161,12 @@ class AddEvent extends React.Component {
             </Form>);
         return (
             <div className="login-container">
-                {inputForm}
+                {this.context.isAuthorized() ? inputForm: this.props.history.push("/login")}
             </div>
         );
     }
 }
+
+AddEvent.contextType = AuthContext;
 
 export { AddEvent };

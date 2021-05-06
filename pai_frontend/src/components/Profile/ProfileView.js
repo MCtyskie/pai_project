@@ -3,6 +3,7 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import { Link } from "react-router-dom";
 import { UserInfo } from './UserInfo';
+import AuthContext from './../AuthContext';
 
 
 class ProfileView extends React.Component {
@@ -59,6 +60,9 @@ class ProfileView extends React.Component {
 	}
 
 	prepareUserView = () => {
+		if(!this.context.isAuthorized()){
+			this.props.history.push("/login");
+		}
 		let incomingEventsPage = [];
 		let pastEventsPage = [];
 		let fullPage;
@@ -135,5 +139,7 @@ class ProfileView extends React.Component {
 		);
 	}
 }
+
+ProfileView.contextType = AuthContext;
 
 export { ProfileView };
