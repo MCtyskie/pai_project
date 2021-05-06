@@ -9,6 +9,7 @@ import React from 'react';
 import Button from 'react-bootstrap/Button';
 import "./event.css";
 import { EventListing } from './EventListing';
+import AuthContext from './../AuthContext';
 
 
 class EventView extends React.Component {
@@ -33,11 +34,13 @@ class EventView extends React.Component {
 	}
 
 	componentDidMount() {
-		this.fetchAllEvents();
-		// Endpoint for fetching all cities?
-		this.fetchAllCities();
-		// Endpoint for fetching possible tags? or join them together somehow so data is dict {'tags':[], 'cities':[],..}
-		this.fetchTags();
+		if(this.context.getToken() !== undefined && this.context.getToken() !== null){
+			this.fetchAllEvents();
+			// Endpoint for fetching all cities?
+			this.fetchAllCities();
+			// Endpoint for fetching possible tags? or join them together somehow so data is dict {'tags':[], 'cities':[],..}
+			this.fetchTags();
+		}
 	}
 
 	fetchAllEvents() {
@@ -145,6 +148,8 @@ class EventView extends React.Component {
 
 	render() {
 		return (
+			<>
+			{this.context.isAuthorized() ? (
 			// Filter by tags, city, date, name, agerestricted
 			<div className="event-container">
 				<div className="event-filter-container">
@@ -241,9 +246,16 @@ class EventView extends React.Component {
 					</div>
 				</div>
 				<EventListing events={this.state.eventList}></EventListing>
-			</div>
+			</div>) : (
+				<div>
+					{this.props.history.push("/login")}
+				</div>
+			)}
+			</>
 		);
 	}
 }
+
+EventView.contextType = AuthContext;
 
 export { EventView };

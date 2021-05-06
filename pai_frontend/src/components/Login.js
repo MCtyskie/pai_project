@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import { Link } from "react-router-dom";
 import "./login.css"
+import AuthContext from './AuthContext';
 
 
 class Login extends React.Component {
@@ -102,5 +103,7 @@ class Login extends React.Component {
         );
     }
 }
+
+Login.contextType = AuthContext;
 
 export { Login };
