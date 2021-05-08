@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,11 +54,9 @@ public class UserService {
         return user;
     }
 
-    public boolean getUserByEmail(String email){
-        if(userRepository.findUserByEmail(email).isPresent()){
-            return true;
-        }
-        return false;
+    public Optional<User> getUserByEmail(String email){
+        Optional<User> user = userRepository.findUserByEmail(email);
+        return user;
     }
 
     public boolean updateUser(User user){
@@ -81,6 +80,17 @@ public class UserService {
         Optional<User> user = userRepository.findUserByUserID(id);
         if(user.isPresent()) return user.get().getUserProfileJSON();
         else return null;
+    }
+
+    public User.UserProfileJSON getUserProfileJSONbyEmail(String email){
+        Optional<User> user = userRepository.findUserByEmail(email);
+        if(user.isPresent()) return user.get().getUserProfileJSON();
+        else return null;
+    }
+
+    public List<User> getUsers(){
+        List<User> list = (List<User>) userRepository.findAll();
+        return list;
     }
 
 

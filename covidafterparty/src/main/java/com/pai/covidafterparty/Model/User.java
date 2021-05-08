@@ -28,12 +28,15 @@ public class User {
     private String phone;
     private boolean activeAccount;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "owner")
     private List<Event> ownedEvents;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "inviter")
     private Invitation invitationSent;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "invited")
     private List<Invitation> invitationsReceived;
 
@@ -47,6 +50,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name="roleID"))
     private Set<Role> roles=new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "reviewer")
     private List<Review> reviews;
 

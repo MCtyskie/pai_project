@@ -1,5 +1,6 @@
 package com.pai.covidafterparty.Controller;
 
+import com.pai.covidafterparty.Model.Role;
 import com.pai.covidafterparty.Model.User;
 import com.pai.covidafterparty.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api/user")
 public class UserController {
     private UserService userService;
 
@@ -27,17 +32,16 @@ public class UserController {
         return new ResponseEntity<>("User already exists", HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @GetMapping("/user/profile")
-    ResponseEntity<User.UserProfileJSON> getUserProfileInfo(@RequestParam long id){
-        User.UserProfileJSON userJSON = userService.getUserProfileJSON(id);
-        ResponseEntity<User.UserProfileJSON> respond;
-        if(userJSON != null) return new ResponseEntity<User.UserProfileJSON>(userJSON, HttpStatus.OK);
-        return new ResponseEntity<User.UserProfileJSON>(new User.UserProfileJSON(), HttpStatus.NOT_FOUND);
+    @GetMapping("/profile")
+    ResponseEntity<User.UserProfileJSON> getUserProfile(Principal principal){
+        User.UserProfileJSON userJSON = userService.getUserProfileJSONbyEmail(principal.getName());
+        if(userJSON != null) return new ResponseEntity<>(userJSON, HttpStatus.OK);
+        return new ResponseEntity<>(new User.UserProfileJSON(), HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/user/edit")
-    ResponseEntity<String> editUser(@RequestBody User.UserProfileJSON userJSON){
-        Optional<User> userOptional = userService.getUserById(userJSON.getUserID());
+    @PutMapping("/edit")
+    ResponseEntity<String> editUser(Principal principal, @RequestBody User.UserProfileJSON userJSON){
+        Optional<User> userOptional = userService.getUserByEmail(principal.getName());
         if(userOptional.isPresent()){
             try {
                 User user = userOptional.get();
@@ -46,20 +50,32 @@ public class UserController {
                 user.setCity(userJSON.getCity());
                 user.setPhone(userJSON.getPhone());
                 userService.updateUser(user);
-                return new ResponseEntity<String>("User edited", HttpStatus.OK);
+                return new ResponseEntity<>("User edited", HttpStatus.OK);
             } catch(Exception e){
-                return new ResponseEntity<String>("Bad request", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
             }
         }
-        else return new ResponseEntity<String>("Bad request", HttpStatus.BAD_REQUEST);
+        else return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping("/user/delete")
-    ResponseEntity<String> deleteUser(@RequestParam long userID){
-        if(userService.deleteUser(userID)){
-            return new ResponseEntity<String>("User with ID: "+userID+" deleted succesfully", HttpStatus.OK);
+    @DeleteMapping("/delete")
+    ResponseEntity<String> deleteUser(Principal principal, @RequestParam long userID){
+        if(userService.deleteUser(userService.getUserByEmail(principal.getName()).get().getUserID())){
+            return new ResponseEntity<>("User with ID: " + userID + " deleted succesfully", HttpStatus.OK);
         } else {
-            return new ResponseEntity<String>("User not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/users")
+    ResponseEntity<List<User>> getUserProfiles(Principal principal){
+        User user = userService.getUserByEmail(principal.getName()).get();
+        if(user.getRoles().stream().anyMatch(r -> r.getUserRole().equals("ROLE_ADMIN"))) {
+            List<User> usersList = userService.getUsers();
+            if (!usersList.isEmpty()) return new ResponseEntity<>(usersList, HttpStatus.OK);
+            return new ResponseEntity<>(usersList, HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
         }
     }
 }

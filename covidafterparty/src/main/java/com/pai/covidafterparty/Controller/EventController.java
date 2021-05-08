@@ -2,6 +2,7 @@ package com.pai.covidafterparty.Controller;
 
 import com.pai.covidafterparty.Model.Event;
 import com.pai.covidafterparty.Service.EventService;
+import com.pai.covidafterparty.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import java.util.Optional;
 public class EventController {
     @Autowired
     EventService eventService;
+    @Autowired
+    UserService userService;
 
     @GetMapping("/events")
     ResponseEntity<List<Event.EventItemJSON>> getEvents(){
@@ -27,14 +30,14 @@ public class EventController {
     ResponseEntity<Event.EventDetailsJSON> getEventDetails(@RequestParam long eventID){
         Optional<Event> event = eventService.getEventById(eventID);
         if(event.isPresent()){
-            return new ResponseEntity<Event.EventDetailsJSON>(event.get().getEvenDetailsJSON(), HttpStatus.OK);
+            return new ResponseEntity<>(event.get().getEvenDetailsJSON(), HttpStatus.OK);
         } else {
             return new ResponseEntity<Event.EventDetailsJSON>(new Event.EventDetailsJSON(), HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/edit")
-    ResponseEntity<String> editEvent(@RequestBody Event.EventDetailsJSON eventDetails, @RequestParam long eventID){
+    ResponseEntity<String> editEvent(Principal principal, @RequestBody Event.EventDetailsJSON eventDetails, @RequestParam long eventID){
         Optional<Event> eventOptional = eventService.getEventById(eventID);
         if(eventOptional.isPresent()){
             Event event = eventOptional.get();
@@ -62,17 +65,20 @@ public class EventController {
     }
 
     @DeleteMapping("/delete")
-    ResponseEntity<String> deleteEvent(@RequestParam long eventID){
+    ResponseEntity<String> deleteEvent(Principal principal, @RequestParam long eventID){
         if(eventService.deleteEvent(eventID)){
-            return new ResponseEntity<String>("Event deleted", HttpStatus.OK);
+            return new ResponseEntity<>("Event deleted", HttpStatus.OK);
         } else {
-            return new ResponseEntity<String>("Event not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Event not found", HttpStatus.NOT_FOUND);
         }
     }
 
-    @GetMapping("/test1")
-    ResponseEntity<String> test1(Principal principal){
-        return new ResponseEntity<>(principal.getName(), HttpStatus.OK);
+    @GetMapping("/incoming_events")
+    ResponseEntity<List<Event.EventItemJSON>> incomingEvents(Principal principal){
+        List<Event.EventItemJSON> resultList = eventService.getIncomingEvents(userService.getUserByEmail(principal.getName()).get());
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
+
+
 
 }
