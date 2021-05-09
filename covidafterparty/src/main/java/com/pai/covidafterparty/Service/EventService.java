@@ -3,6 +3,8 @@ package com.pai.covidafterparty.Service;
 import com.pai.covidafterparty.Model.Event;
 import com.pai.covidafterparty.Model.User;
 import com.pai.covidafterparty.Repository.EventRepository;
+import com.pai.covidafterparty.Repository.EventRepositoryCustom;
+import com.pai.covidafterparty.Repository.EventRepositoryCustomImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ import java.util.stream.Collectors;
 public class EventService {
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private EventRepositoryCustom eventRepositoryCustom;
 
     public Event addEvent(Event event){
         return eventRepository.save(event);
@@ -54,5 +59,10 @@ public class EventService {
         return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
     }
 
+    public List<Event.EventDetailsJSON> getFilteredEvents(EventRepositoryCustomImpl.EventFilters eventFilters){
+        return eventRepositoryCustom.findByFilters(eventFilters).stream()
+                .map(e -> e.getEvenDetailsJSON())
+                .collect(Collectors.toList());
+    }
 
 }

@@ -1,6 +1,8 @@
 package com.pai.covidafterparty.Controller;
 
 import com.pai.covidafterparty.Model.Event;
+import com.pai.covidafterparty.Repository.EventRepositoryCustom;
+import com.pai.covidafterparty.Repository.EventRepositoryCustomImpl;
 import com.pai.covidafterparty.Service.EventService;
 import com.pai.covidafterparty.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +26,7 @@ public class EventController {
 
     @GetMapping("/events")
     ResponseEntity<List<Event.EventItemJSON>> getEvents(){
-        return new ResponseEntity<List<Event.EventItemJSON>>(eventService.getEvents(), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/details")
@@ -32,7 +35,7 @@ public class EventController {
         if(event.isPresent()){
             return new ResponseEntity<>(event.get().getEvenDetailsJSON(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<Event.EventDetailsJSON>(new Event.EventDetailsJSON(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new Event.EventDetailsJSON(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -58,9 +61,9 @@ public class EventController {
 
             eventService.updateEvent(event);
 
-            return new ResponseEntity<String>("Event updated", HttpStatus.OK);
+            return new ResponseEntity<>("Event updated", HttpStatus.OK);
         } else {
-            return new ResponseEntity<String>("Event not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Event not found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -79,6 +82,14 @@ public class EventController {
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
+    @GetMapping("/events_filter")
+    ResponseEntity<List<Event.EventDetailsJSON>> getFilteredEvents(@RequestBody EventRepositoryCustomImpl.EventFilters eventFilters){
+        try{
+            return new ResponseEntity<>(eventService.getFilteredEvents(eventFilters), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        }
+    }
 
 
 }

@@ -17,6 +17,9 @@ public class InvitationService {
     private InvitationRepository invitationRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private EventService eventService;
 
     public Invitation addInvitation(Invitation invitation){
@@ -58,6 +61,20 @@ public class InvitationService {
         if(optEvent.isPresent()){
             return invitationRepository.findByEvent(eventService.getEventById(eventID).get());
         } else {
+            return null;
+        }
+    }
+
+    public Invitation addInvitationFromJSON(Invitation.InvitationJSON invitationJSON){
+        try {
+            return invitationRepository.save(new Invitation(
+                    invitationJSON.getInvitationID(),
+                    userService.getUserById(invitationJSON.getInviterID()).get(),
+                    userService.getUserById(invitationJSON.getInvitedID()).get(),
+                    eventService.getEventById(invitationJSON.getEventID()).get(),
+                    invitationJSON.getStatus()
+            ));
+        } catch (Exception e){
             return null;
         }
     }
