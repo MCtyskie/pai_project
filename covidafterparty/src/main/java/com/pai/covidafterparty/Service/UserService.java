@@ -15,65 +15,44 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    /*
-    public User addUser(User user){
-        User u=userRepository.findUserByEmail(user.getEmail()).orElse(null);
+    //CREATE
+    public Optional<User> addUser(User user){
+        User u=userRepository.findUserByEmail(user.getEmail()).get();
         if(u==null){
-            return userRepository.save(user);
+            userRepository.save(user);
+            return Optional.of(user);
         }
-        return null;
+        return Optional.empty();
     }
 
+    //READ
     public Optional<User> getUserById(long userID){
-        return userRepository.findUserByUserID(userID);
+        User user = userRepository.findUserByUserID(userID).get();
+        return Optional.of(user);
     }
-
     public Optional<User> getUserByEmail(String email){
-        return userRepository.findUserByEmail(email);
+        User user = userRepository.findUserByEmail(email).get();
+        return Optional.of(user);
     }
 
+    //UPDATE
     public Optional<User> updateUser(User user){
-        User u=userRepository.findUserByEmail(user.getEmail()).orElse(null);
-        if(u!=null){
-            return Optional.of(userRepository.save(user));
-        }
-        return null;
-    }
-     */
-    public boolean addUser(User user){
-        User u=userRepository.findUserByEmail(user.getEmail()).get();
-        if(u==null){
-            userRepository.save(user);
-            return true;
-        }
-        return false;
-    }
-
-    public Optional<User> getUserById(long userID){
-        Optional<User> user = userRepository.findUserByUserID(userID);
-        return user;
-    }
-
-    public Optional<User> getUserByEmail(String email){
-        Optional<User> user = userRepository.findUserByEmail(email);
-        return user;
-    }
-
-    public boolean updateUser(User user){
         User u=userRepository.findUserByEmail(user.getEmail()).get();
         if(u!=null){
             userRepository.save(user);
-            return true;
+            return Optional.of(user);
         }
-        return false;
+        return Optional.empty();
     }
-    public boolean deleteUser(long userID){
+
+    //DELETE
+    public Optional<User> deleteUser(long userID){
         User u=userRepository.findUserByUserID(userID).get();
         if(u!=null){
             userRepository.delete(u);
-            return true;
+            return Optional.of(u);
         }
-        return false;
+        return Optional.empty();
     }
 
     public User.UserProfileJSON getUserProfileJSON(long id){

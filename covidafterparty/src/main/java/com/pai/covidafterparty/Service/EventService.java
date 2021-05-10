@@ -1,6 +1,7 @@
 package com.pai.covidafterparty.Service;
 
 import com.pai.covidafterparty.Model.Event;
+import com.pai.covidafterparty.Model.Review;
 import com.pai.covidafterparty.Model.User;
 import com.pai.covidafterparty.Repository.EventRepository;
 import com.pai.covidafterparty.Repository.EventRepositoryCustom;
@@ -21,31 +22,43 @@ public class EventService {
     @Autowired
     private EventRepositoryCustom eventRepositoryCustom;
 
-    public Event addEvent(Event event){
-        return eventRepository.save(event);
+    //CREATE
+    public Optional<Event> addEvent(Event event){
+        Event e=eventRepository.findEventByEventID(event.getEventID()).get();
+        if(e==null){
+            eventRepository.save(event);
+            return Optional.of(event);
+        }
+        return Optional.empty();
     }
 
+    //READ
     public Optional<Event> getEventById(long eventID){
-        return eventRepository.findEventByEventID(eventID);
+        Event event = eventRepository.findEventByEventID(eventID).get();
+        return Optional.of(event);
     }
 
+    //UPDATE
     public Optional<Event> updateEvent(Event event){
-        Event e=eventRepository.findEventByEventID(event.getEventID()).orElse(null);
+        Event e=eventRepository.findEventByEventID(event.getEventID()).get();
         if(e!=null){
-            return Optional.of(eventRepository.save(event));
+            eventRepository.save(event);
+            return Optional.of(event);
         }
-        return null;
+        return Optional.empty();
     }
 
-    public boolean deleteEvent(long eventID){
-        Optional<Event> selectedEvent=eventRepository.findEventByEventID(eventID);
-        if(selectedEvent.isPresent()){
-            eventRepository.delete(selectedEvent.get());
-            return true;
-        } else {
-            return false;
+    //DELETE
+    public Optional<Event> deleteEvent(long eventID){
+        Event e=eventRepository.findEventByEventID(eventID).get();
+        if(e!=null){
+            eventRepository.delete(e);
+            return Optional.of(e);
         }
+        return Optional.empty();
     }
+
+
 
     public List<Event.EventItemJSON> getEvents(){
         List<Event> resultList = new ArrayList<>();

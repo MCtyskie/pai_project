@@ -2,6 +2,7 @@ package com.pai.covidafterparty.Service;
 
 import com.pai.covidafterparty.Model.Event;
 import com.pai.covidafterparty.Model.Review;
+import com.pai.covidafterparty.Model.User;
 import com.pai.covidafterparty.Repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,31 +14,41 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public Review addEvent(Review review){
-        return reviewRepository.save(review);
+    //CREATE
+    public Optional<Review> addReview(Review review){
+        Review r=reviewRepository.findReviewByReviewID(review.getReviewID()).get();
+        if(r==null){
+            reviewRepository.save(review);
+            return Optional.of(review);
+        }
+        return Optional.empty();
     }
 
+    //READ
     public Optional<Review> getReviewById(long reviewID){
-        return reviewRepository.findReviewByReviewID(reviewID);
+        Review review = reviewRepository.findReviewByReviewID(reviewID).get();
+        return Optional.of(review);
     }
 
-    public Optional<Review> updateEvent(Review review){
-        Review r=reviewRepository.findReviewByReviewID(review.getReviewID()).orElse(null);
+    //UPDATE
+    public Optional<Review> updateUser(Review review){
+        Review r=reviewRepository.findReviewByReviewID(review.getReviewID()).get();
         if(r!=null){
-            return Optional.of(reviewRepository.save(review));
+            reviewRepository.save(review);
+            return Optional.of(review);
         }
-        return null;
+        return Optional.empty();
     }
 
-    public String deleteReview(long reviewID){
-        Optional<Review> selectedReview=reviewRepository.findReviewByReviewID(reviewID);
-        if(selectedReview.isPresent()){
-            Review review=selectedReview.get();
-            String message=String.format("Review with id: %d deleted",review.getReviewID());
-            reviewRepository.delete(review);
-            return message;
+    //DELETE
+    public Optional<Review> deleteReview(long reviewID){
+        Review r=reviewRepository.findReviewByReviewID(reviewID).get();
+        if(r!=null){
+            reviewRepository.delete(r);
+            return Optional.of(r);
         }
-        return "";
+        return Optional.empty();
     }
+
 
 }

@@ -22,32 +22,42 @@ public class InvitationService {
     @Autowired
     private EventService eventService;
 
-    public Invitation addInvitation(Invitation invitation){
-        return invitationRepository.save(invitation);
+    //CREATE
+    public Optional<Invitation> addInvitation(Invitation invitation){
+        Invitation i=invitationRepository.findInvitationByInvitationID(invitation.getInvitationID()).get();
+        if(i==null){
+            invitationRepository.save(invitation);
+            return Optional.of(invitation);
+        }
+        return Optional.empty();
     }
 
+    //READ
     public Optional<Invitation> getInvitationById(long invitationID){
-        return invitationRepository.findInvitationByInvitationID(invitationID);
+        Invitation invitation = invitationRepository.findInvitationByInvitationID(invitationID).get();
+        return Optional.of(invitation);
     }
 
+    //UPDATE
     public Optional<Invitation> updateInvitation(Invitation invitation){
-        Invitation i=invitationRepository.findInvitationByInvitationID(invitation.getInvitationID()).orElse(null);
+        Invitation i=invitationRepository.findInvitationByInvitationID(invitation.getInvitationID()).get();
         if(i!=null){
-            return Optional.of(invitationRepository.save(invitation));
+            invitationRepository.save(invitation);
+            return Optional.of(invitation);
         }
-        return null;
+        return Optional.empty();
     }
 
-    public String deleteReview(long invitationID){
-        Optional<Invitation> selectedInvitation=invitationRepository.findInvitationByInvitationID(invitationID);
-        if(selectedInvitation.isPresent()){
-            Invitation invitation=selectedInvitation.get();
-            String message=String.format("Invitation with id: %d deleted",invitation.getInvitationID());
-            invitationRepository.delete(invitation);
-            return message;
+    //DELETE
+    public Optional<Invitation> deleteInvitation(long invitationID){
+        Invitation i=invitationRepository.findInvitationByInvitationID(invitationID).get();
+        if(i!=null){
+            invitationRepository.delete(i);
+            return Optional.of(i);
         }
-        return "";
+        return Optional.empty();
     }
+
 
     public List<Invitation> getInvitations(){
         List<Invitation> returnList = new ArrayList<>();
