@@ -62,7 +62,7 @@ class EventView extends React.Component {
 			.then(response => {
 				console.log(response.data);
 				// this.setState({ eventList: response.data, isFetchingData: false });
-				this.setState({ eventList: response.data});
+				// this.setState({ eventList: response.data});
 			})
 			.catch(err => {
 				console.log(err);
@@ -119,27 +119,6 @@ class EventView extends React.Component {
 		this.setState({ cities: dummy_data });
 	}
 
-	fetchTags() {
-		// const backend_url = "http://localhost:8081/api/event/tags";
-		// axios.get(backend_url, {
-		// 	headers: {
-		// 		"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
-		// 	}
-		// })
-		// 	.then(response => {
-		// 		this.setState({ tags: response.data});
-		// 	})
-		// 	.catch(err => {
-		// 		console.log(err);
-		// 	})
-		let dummy_data = [
-			"Rave",
-			"Rock",
-			"Dance",
-		];
-		this.setState({ tags: dummy_data });
-	}
-
 
 	handleReset() {
 		this.setState({ selected_city: null, selected_tags: null, event_start_date: null, event_end_date: null, event_time_start: null, event_time_end: null })
@@ -165,9 +144,9 @@ class EventView extends React.Component {
 							style={{ width: "20%" }}
 							renderInput={(params) => <TextField {...params} label="City" color="primary" variant={"outlined"} />}
 						/>
+						{/* Maybe autocomplete with multiple value set? */}
 						<Autocomplete
 							id="tags-filter"
-							options={this.state.tags}
 							value={this.state.selected_tags}
 							onChange={(event, newValue) => {
 								this.setState({ selected_tags: newValue });

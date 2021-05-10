@@ -3,12 +3,14 @@ import axios from 'axios';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import AuthContext from './../AuthContext';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { TextField } from '@material-ui/core';
 
 
 class AddEvent extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
+    constructor(props) {
+        super(props);
+        this.state = {
             title: "",
             city: "",
             postNumber: "",
@@ -21,13 +23,13 @@ class AddEvent extends React.Component {
             description: "",
             ageRestriction: false,
             openEvent: false,
-		}
+        }
         this.handleChange = this.handleChange.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
-	}
+    }
 
-	componentDidMount() {
-	}
+    componentDidMount() {
+    }
 
     handleChange(event) {
         const target = event.target;
@@ -72,7 +74,7 @@ class AddEvent extends React.Component {
         }
     }
 
-	render() {
+    render() {
         let inputForm =
             (<Form className="form-container" validated={this.state.validated} onSubmit={this.handleSingup}>
                 <Form.Group controlId="formBasicTitle">
@@ -152,16 +154,31 @@ class AddEvent extends React.Component {
 
                 <Form.Group controlId="formBasicDescription">
                     <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" name="description" onChange={this.handleChange} rows={3}/>
+                    <Form.Control as="textarea" name="description" onChange={this.handleChange} rows={3} />
                 </Form.Group>
 
                 <Button variant="primary" className="submit-btn" type="submit">
                     Create Event!
                     </Button>
             </Form>);
+        let tagsInput = (
+            <Autocomplete
+                multiple
+                id="tags-standard"
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        variant="standard"
+                        label="Multiple values"
+                        placeholder="Tags"
+                    />
+                )}
+            />
+        )
         return (
             <div className="login-container">
-                {this.context.isAuthorized() ? inputForm: this.props.history.push("/login")}
+                {this.context.isAuthorized() ? inputForm : this.props.history.push("/login")}
+                {this.context.isAuthorized() ? tagsInput : this.props.history.push("/login")}
             </div>
         );
     }
