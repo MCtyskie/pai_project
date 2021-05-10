@@ -25,8 +25,7 @@ public class UserController {
     }
 
     ResponseEntity<String> createUser(User user){
-        boolean val=userService.addUser(user);
-        if(val){
+        if(Optional.of(userService.addUser(user)).get().isPresent()){
             return new ResponseEntity<>("User saved correctly", HttpStatus.OK);
         }
         return new ResponseEntity<>("User already exists", HttpStatus.NOT_ACCEPTABLE);
@@ -60,8 +59,8 @@ public class UserController {
 
     @DeleteMapping("/delete")
     ResponseEntity<String> deleteUser(Principal principal, @RequestParam long userID){
-        if(userService.deleteUser(userService.getUserByEmail(principal.getName()).get().getUserID())){
-            return new ResponseEntity<>("User with ID: " + userID + " deleted succesfully", HttpStatus.OK);
+        if(Optional.of(userService.deleteUser(userService.getUserByEmail(principal.getName()).get().getUserID())).get().isPresent()){
+            return new ResponseEntity<>("User with ID: " + userID + " deleted successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
