@@ -69,7 +69,7 @@ public class EventController {
 
     @DeleteMapping("/delete")
     ResponseEntity<String> deleteEvent(Principal principal, @RequestParam long eventID){
-        if(eventService.deleteEvent(eventID)){
+        if(Optional.of(eventService.deleteEvent(eventID)).get().isPresent()){
             return new ResponseEntity<>("Event deleted", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Event not found", HttpStatus.NOT_FOUND);
