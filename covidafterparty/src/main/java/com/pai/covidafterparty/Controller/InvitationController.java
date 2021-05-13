@@ -21,7 +21,7 @@ public class InvitationController {
         return new ResponseEntity<>(invitationService.getInvitations(), HttpStatus.OK);
     }
 
-    @GetMapping("/invitations/x")
+    @GetMapping("/invitations")
     ResponseEntity<List<Invitation>> getInvitationForEvent(@RequestParam long eventID){
         return new ResponseEntity<>(invitationService.getInvitationsForEvent(eventID), HttpStatus.OK);
     }

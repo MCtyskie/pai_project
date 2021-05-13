@@ -66,7 +66,11 @@ public class EventService {
         return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
     }
 
-
+    public List<Event.EventItemJSON> getIncomingEvents(User user){
+        List<Event> resultList = new ArrayList<>();
+        eventRepository.findIncomingForUser(user.getUserID()).forEach(resultList::add);
+        return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
+    }
 
     public List<Event.EventDetailsJSON> getFilteredEvents(EventRepositoryCustomImpl.EventFilters eventFilters){
         return eventRepositoryCustom.findByFilters(eventFilters).stream()
