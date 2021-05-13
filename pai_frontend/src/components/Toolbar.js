@@ -40,7 +40,7 @@ class Toolbar extends React.Component {
 						</NavDropdown>
 						<NavDropdown title="Reviews" id="reviews">
 							<NavDropdown.Item key="6" href="/my_reviews" title="">My Reviews</NavDropdown.Item>
-							<NavDropdown.Item key="7" href="/issue_review" title="">Write a Review</NavDropdown.Item>
+							<NavDropdown.Item key="7" href="/issue_review" title="">Write Review</NavDropdown.Item>
 						</NavDropdown>
 					</Nav>
 					<Nav>

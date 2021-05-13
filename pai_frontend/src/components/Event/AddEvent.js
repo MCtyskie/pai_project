@@ -3,8 +3,8 @@ import axios from 'axios';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import AuthContext from './../AuthContext';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import Chip from '@material-ui/core/Chip';
 
 
 class AddEvent extends React.Component {
@@ -18,7 +18,8 @@ class AddEvent extends React.Component {
             eventDate: "",
             activity: false,
             visibility: false,
-            tags: "",
+            tag:"",
+            tags: [],
             maxGuest: "",
             description: "",
             ageRestriction: false,
@@ -26,6 +27,8 @@ class AddEvent extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
+        this.handleTagInput = this.handleTagInput.bind(this);
+        this.handleTagDelete = this.handleTagDelete.bind(this);
     }
 
     componentDidMount() {
@@ -38,6 +41,22 @@ class AddEvent extends React.Component {
         this.setState({
             [name]: value
         });
+    }
+
+    handleTagInput() {
+        let tagsList = this.state.tags;
+        if (tagsList.length > 9) {
+            console.log("alert, no more than 10 tags");
+        }
+        else {
+            tagsList.push(this.state.tag);
+            this.setState({ tags: tagsList, tag: ""}, () => console.log(this.state.tags));
+        }
+    }
+
+    handleTagDelete(tag){
+        let newTags = this.state.tags.filter((item) => item !== tag);
+        console.log(newTags);
     }
 
     handleAdd(event) {
@@ -75,6 +94,10 @@ class AddEvent extends React.Component {
     }
 
     render() {
+        let tags = [];
+        this.state.tags.forEach(tag => {
+                        tags.push(<Chip color="primary" onDelete={this.handleTagDelete(tag)} label={tag} />)
+                    })
         let inputForm =
             (<Form className="form-container" validated={this.state.validated} onSubmit={this.handleSingup}>
                 <Form.Group controlId="formBasicTitle">
@@ -156,30 +179,18 @@ class AddEvent extends React.Component {
                     <Form.Label>Description</Form.Label>
                     <Form.Control as="textarea" name="description" onChange={this.handleChange} rows={3} />
                 </Form.Group>
+                {/* TODO styles & ondelete for chip not working*/}
+                <TextField id="tagsInput" value={this.state.tag} name="tag" label="Tag" variant="outlined" onChange={this.handleChange} />
+                <Button variant="primary" onClick={this.handleTagInput}>Add Tag</Button>
+                {tags}
 
                 <Button variant="primary" className="submit-btn" type="submit">
                     Create Event!
                     </Button>
             </Form>);
-
-        let tagsInput = (
-            <Autocomplete
-                multiple
-                id="tags-standard"
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        variant="standard"
-                        label="Multiple values"
-                        placeholder="Tags"
-                    />
-                )}
-            />
-        )
         return (
             <div className="login-container">
                 {this.context.isAuthorized() ? inputForm : this.props.history.push("/login")}
-                {this.context.isAuthorized() ? tagsInput : this.props.history.push("/login")}
             </div>
         );
     }

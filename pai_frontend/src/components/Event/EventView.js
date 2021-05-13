@@ -26,7 +26,6 @@ class EventView extends React.Component {
 			eventList:[],
 		}
 		this.fetchAllCities = this.fetchAllCities.bind(this);
-		this.fetchTags = this.fetchTags.bind(this);
 		this.fetchAllEvents = this.fetchAllEvents.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.dummyEvents = this.dummyEvents.bind(this);
@@ -37,8 +36,6 @@ class EventView extends React.Component {
 			this.fetchAllEvents();
 			// Endpoint for fetching all cities?
 			this.fetchAllCities();
-			// Endpoint for fetching possible tags? or join them together somehow so data is dict {'tags':[], 'cities':[],..}
-			this.fetchTags();
 		}
 	}
 
