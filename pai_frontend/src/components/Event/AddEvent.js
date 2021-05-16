@@ -18,7 +18,7 @@ class AddEvent extends React.Component {
             eventDate: "",
             activity: false,
             visibility: false,
-            tag:"",
+            tag: "",
             tags: [],
             maxGuest: "",
             description: "",
@@ -48,15 +48,18 @@ class AddEvent extends React.Component {
         if (tagsList.length > 9) {
             console.log("alert, no more than 10 tags");
         }
+        else if(this.state.tag.length >20){
+            console.log("Alert, no longer than 20 chars!");
+        }
         else {
             tagsList.push(this.state.tag);
-            this.setState({ tags: tagsList, tag: ""}, () => console.log(this.state.tags));
+            this.setState({ tags: tagsList, tag: "" });
         }
     }
 
-    handleTagDelete(tag){
+    handleTagDelete(tag) {
         let newTags = this.state.tags.filter((item) => item !== tag);
-        console.log(newTags);
+        this.setState({ tags: newTags });
     }
 
     handleAdd(event) {
@@ -96,8 +99,8 @@ class AddEvent extends React.Component {
     render() {
         let tags = [];
         this.state.tags.forEach(tag => {
-                        tags.push(<Chip color="primary" onDelete={this.handleTagDelete(tag)} label={tag} />)
-                    })
+            tags.push(<Chip color="primary" onDelete={() => { this.handleTagDelete(tag) }} label={tag} />)
+        })
         let inputForm =
             (<Form className="form-container" validated={this.state.validated} onSubmit={this.handleSingup}>
                 <Form.Group controlId="formBasicTitle">
@@ -179,10 +182,13 @@ class AddEvent extends React.Component {
                     <Form.Label>Description</Form.Label>
                     <Form.Control as="textarea" name="description" onChange={this.handleChange} rows={3} />
                 </Form.Group>
-                {/* TODO styles & ondelete for chip not working*/}
-                <TextField id="tagsInput" value={this.state.tag} name="tag" label="Tag" variant="outlined" onChange={this.handleChange} />
-                <Button variant="primary" onClick={this.handleTagInput}>Add Tag</Button>
-                {tags}
+                <Form.Group controlId="inputTags" className="row-container">
+                    <TextField id="tagsInput" value={this.state.tag} name="tag" label="Tag" variant="outlined" onChange={this.handleChange} />
+                    <Button variant="primary" onClick={this.handleTagInput}>Add Tag</Button>
+                </Form.Group>
+                <Form.Group controlId="formTags">
+                    {tags}
+                </Form.Group>
 
                 <Button variant="primary" className="submit-btn" type="submit">
                     Create Event!

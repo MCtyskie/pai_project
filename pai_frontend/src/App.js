@@ -42,6 +42,8 @@ class App extends Component {
 
 	componentDidMount() {
 		console.log("Loaded App js");
+		// TEMP key for development
+		localStorage.setItem('token', "TESTOKEN123.123.123");
 	}
 
 
