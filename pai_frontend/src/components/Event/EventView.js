@@ -79,6 +79,7 @@ class EventView extends React.Component {
 					"maxGuests": "100",
 					"picture": "JPG",
 					"description": "witajcie na testowym evencie melo inferno jak sie macie panowie haha",
+					"tags": ["Dance", "Pop", "Biba"],
 				},
 				{
 					"title": "meloinferno",
@@ -89,6 +90,7 @@ class EventView extends React.Component {
 					"maxGuests": "100",
 					"picture": "JPG",
 					"description": "Drugi testowy event",
+					"tags": ["Rock", "Metal", "Alko"],
 				}
 			], isFetchingData: false
 		});

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Nav } from 'react-bootstrap';
-import { NavHashLink } from 'react-router-hash-link';
 import { Checkbox } from '@material-ui/core';
 import "./event.css";
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
+import { Link } from 'react-scroll'
+import Chip from '@material-ui/core/Chip';
 
 
 class EventDetails extends React.Component {
@@ -62,6 +62,10 @@ class EventDetails extends React.Component {
 	}
 
 	render() {
+		let eventTags = []
+		this.props.location.query.eventItem.tags.forEach(tag => {
+            eventTags.push(<Chip color="primary" label={tag} />)
+        })
 		return (
 			<div className="event-details-container">
 				<div className="event-title">
@@ -75,31 +79,40 @@ class EventDetails extends React.Component {
 				<div className="row-container">
 					<div className="event-lower-info">Over 18?<Checkbox checked={this.props.location.query.eventItem.ageRestriction} disabed className="checkbox"></Checkbox></div>
 					<div className="event-lower-info">Invitations: {this.props.location.query.eventItem.invitationsAccepted}/{this.props.location.query.eventItem.maxGuests}</div>
-					<div className="event-lower-info">{this.props.location.query.eventItem.tags}</div>
+					<div className="event-lower-info">{eventTags}</div>
 				</div>
-				<Button variant="primary" onClick={this.handleJoin}>Join</Button>
-				{/* TODO test nav scroll */}
-				<Nav className="justify-content-center">
-					<NavHashLink smooth to="/event#description">
+				<Button variant="primary" onClick={this.handleJoin}>Join Event</Button>
+				<div className="event-nav-details">
+					<Link
+						to="description"
+						smooth={true}
+						spy={true}>
 						Description
-					</NavHashLink>
-					<NavHashLink smooth to="/event#invitations">
+					</Link>
+					<Link
+						to="event-invitations"
+						smooth={true}
+						spy={true}>
 						Invitations
-					</NavHashLink>
-					<NavHashLink smooth to="/event#reviews">
+					</Link>
+					<Link
+						to="event-reviews"
+						smooth={true}
+						spy={true}>
 						Reviews
-					</NavHashLink>
-				</Nav>
+					</Link>
+				</div>
 
-				<section id="description">
+				<div id="description">
 					{this.props.location.query.eventItem.description}
-				</section>
-				<section id="invitations">
+				</div>
+				<div id="event-invitations">
 					{this.state.eventInvitations}
-				</section>
-				<section id="reviews">
+				</div>
+				<div id="event-reviews">
 					{this.state.eventReviews}
-				</section>
+				</div>
+				<Button variant="primary">Add Review - TODO</Button>
 			</div>
 		);
 	}

@@ -73,6 +73,11 @@ a:focus, a:hover, a:visited, a:link, a:active {
     flex-direction: column;
 }
 
+.event-nav-details{
+    display:flex;
+    justify-content: space-around;
+}
+
 /* EVENT FILTER CSS */
 
 .event-filter-container{
