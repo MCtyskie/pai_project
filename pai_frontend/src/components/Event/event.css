@@ -34,6 +34,12 @@
     justify-content: space-around;
 }
 
+.column-container{
+    display: flex;
+    flex-direction: column;
+    width:90%;
+}
+
 .event-photo{
     width:50%;
 }
@@ -88,4 +94,29 @@ a:focus, a:hover, a:visited, a:link, a:active {
 .filter-button{
     display:flex;
     margin:5px;
+}
+
+/* EVENT ROW CSS */
+
+.event-row-container{
+    display: flex;
+    min-width: 400px;
+    max-width: 35%;
+}
+
+.event-row-column{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.event-row-date{
+    font-weight: 500;
+}
+.event-row-row-container{
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.event-row-info{
+    width:100%;
+    text-align: center;
 }

@@ -48,25 +48,35 @@ class UserInfo extends React.Component {
             "email": "jkowal@test.com",
             "city": "TestCity",
             "phone": "987987987",
+            "birthdate": "2000-01-01",
             "photo": "JPG",
         }
+        let userInformations = [];
+        for (const [key, value] of Object.entries(dummy_data)) {
+            if (key === "userID" || key === "photo") {
+                continue;
+            }
+            userInformations.push(<div className="user-info">{value}</div>)
+        }
         userPanel = (
-            <div className="user-info">
-                <div className="column-container">
-                    <div className="tst">{dummy_data.photo}</div>
-                    {/* Not sure if link or maybe on this page or dialog openup? */}
-                    <Link to="/edit_profile">
-                        <Button>
-                            Edit Profile
-                        </Button>
-                    </Link>
+            <div className="user-container">
+                <div className="user-column">
+                    <div className="user-picture">
+                        {dummy_data.photo}
+                    </div>
+                    <Button className="">EDIT PICTURE</Button>
                 </div>
-                <div className="column-container">
-                    <div className="tst">{dummy_data.name}</div>
+                <div className="user-column">
+                    <div className="user-row-info">
+                        {userInformations}
+                    </div>
+                    <div className="user-manage-btns">
+                        <Button className="" variant="primary">EDIT PROFILE</Button>
+                        <Button className="" variant="danger">DELETE PROFILE</Button>
+                        <Button className="" variant="warning">CHANGE PASSWORD</Button>
+                    </div>
                 </div>
-
             </div>
-
         )
         return userPanel
     }

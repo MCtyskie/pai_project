@@ -15,6 +15,7 @@ class AddReview extends React.Component {
 
 
     render() {
+        // TODO show events that has not been reviewed by the user with buttons to event details to issue a new review
         return (
                 <div>Hello from add review</div>
         );

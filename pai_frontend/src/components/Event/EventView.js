@@ -2,7 +2,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
-	KeyboardDatePicker, KeyboardTimePicker, MuiPickersUtilsProvider
+	KeyboardDatePicker, MuiPickersUtilsProvider
 } from '@material-ui/pickers';
 import axios from 'axios';
 import React from 'react';
@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import "./event.css";
 import { EventListing } from './EventListing';
 import AuthContext from './../AuthContext';
+import { TimePicker } from "@material-ui/pickers";
 
 
 class EventView extends React.Component {
@@ -18,7 +19,7 @@ class EventView extends React.Component {
 		this.state = {
 			cities: [],
 			selected_city: null,
-			selected_tags: null,
+			searchByTag: null,
 			event_start_date: null,
 			event_end_date: null,
 			event_time_start: null,
@@ -48,7 +49,7 @@ class EventView extends React.Component {
 			},
 			params: {
 				city: this.state.selected_city,
-				tags: this.state.selected_tags,
+				tag: this.state.searchByTag,
 				date_start: this.state.event_start_date,
 				date_end: this.state.event_end_date,
 				time_start: this.state.event_time_start,
@@ -140,12 +141,14 @@ class EventView extends React.Component {
 							style={{ width: "20%" }}
 							renderInput={(params) => <TextField {...params} label="City" color="primary" variant={"outlined"} />}
 						/>
-						{/* Maybe autocomplete with multiple value set? */}
+						{/* FreeSolo -> only one input as String from user */}
 						<Autocomplete
 							id="tags-filter"
-							value={this.state.selected_tags}
+							freeSolo
+							options={[]}
+							value={this.state.searchByTag}
 							onChange={(event, newValue) => {
-								this.setState({ selected_tags: newValue });
+								this.setState({ searchByTag: newValue });
 							}}
 							style={{ width: "20%" }}
 							renderInput={(params) => <TextField {...params} label="Tag" color="primary" variant={"outlined"} />}
@@ -183,30 +186,26 @@ class EventView extends React.Component {
 									'aria-label': 'change date',
 								}}
 							/>
-							<KeyboardTimePicker
+							<TimePicker
 								variant="inline"
 								margin="normal"
 								id="event-time-start"
 								label="Time from"
+								ampm={false}
 								value={this.state.event_time_start}
-								onChange={(event, newValue) => {
-									this.setState({ event_time_start: newValue });
-								}}
-								KeyboardButtonProps={{
-									'aria-label': 'change time',
+								onChange={(newValue) => {
+									this.setState({ event_time_start: newValue});
 								}}
 							/>
-							<KeyboardTimePicker
+							<TimePicker
 								variant="inline"
 								margin="normal"
 								id="event-time-end"
 								label="Time to"
+								ampm={false}
 								value={this.state.event_time_end}
-								onChange={(event, newValue) => {
+								onChange={(newValue) => {
 									this.setState({ event_time_end: newValue });
-								}}
-								KeyboardButtonProps={{
-									'aria-label': 'change time',
 								}}
 							/>
 						</MuiPickersUtilsProvider>

@@ -1,9 +1,48 @@
-.user-info{
+.user-container{
+    /* Width to be set correctly? */
+    display:flex;
+    width: 80%;
+}
+.user-column:first-child{
+    width:30%;
+}
+.user-column{
+    display: flex;
+    flex-direction: column;
+    width:100%;
+}
+.user-picture{
+    width: 120px;
+    height: 120px;
+}
+.user-row-info{
     display:flex;
     flex-direction: row;
+    flex-wrap:wrap;
+}
+.user-info{
+    width:100%;
+}
+.user-manage-btns{
+    display:flex;
+    width:100%;
+    justify-content: space-around;
+}
+/* TODO button customization */
+.user-btn{
+    
 }
 
-.column-container{
+.user-view-container{
     display:flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap:wrap;
+    justify-content: space-evenly;
+}
+
+.user-events-container{
+    display:flex;
+    width:100%;
+    justify-content: space-evenly;
+    margin-top:20px;
 }

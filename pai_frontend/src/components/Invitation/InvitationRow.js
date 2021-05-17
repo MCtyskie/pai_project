@@ -11,10 +11,13 @@ class InvitationRow extends React.Component{
 
     componentDidMount(){
         console.log("loaded Invitation row");
+        let dummy_invitation = {
+            
+        };
     }
 
     render(){
-        // TODO implement small rows for profile incoming / past events
+        // TODO prepare invitation row view for invitation view per event (?)
         return(
             <div>
                 

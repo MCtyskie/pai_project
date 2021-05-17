@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { Link } from "react-router-dom";
 import { UserInfo } from './UserInfo';
 import AuthContext from './../AuthContext';
+import EventRow from '../Event/EventRow';
 
 
 class ProfileView extends React.Component {
@@ -23,7 +24,7 @@ class ProfileView extends React.Component {
 		console.log("Loaded My Profile");
 	}
 
-	
+
 	fetchUserIncomingEvents() {
 		// this.setState({ isFetchingData: true });
 		// const backend_url = "http://localhost:8081/user/incoming";
@@ -39,7 +40,7 @@ class ProfileView extends React.Component {
 		// 		console.log(err);
 		// 		this.setState({ isFetchingData: false });
 		// 	})
-		
+
 	}
 
 	fetchUserFinishedEvents() {
@@ -60,7 +61,7 @@ class ProfileView extends React.Component {
 	}
 
 	prepareUserView = () => {
-		if(!this.context.isAuthorized()){
+		if (!this.context.isAuthorized()) {
 			this.props.history.push("/login");
 		}
 		let incomingEventsPage = [];
@@ -94,37 +95,29 @@ class ProfileView extends React.Component {
 
 			}
 		]
-		// TODO maybe do a separate component for those submenus?
 		for (const eventItem of dummy_data_incoming) {
 			incomingEventsPage.push(
-				<div className="row-container">
-					<div className="event-date">{eventItem.date}</div>
-					<div className="event-title">{eventItem.title}</div>
-					<div className="event-address">{eventItem.address}</div>
-				</div>
+				<EventRow item={eventItem}></EventRow>
 			)
 		}
 		for (const eventItem of dummy_data_past) {
 			// for (const eventItem of this.state.pastEvents) {
 			pastEventsPage.push(
-				<div className="row-container">
-					<div className="event-date">{eventItem.date}</div>
-					<div className="event-title">{eventItem.title}</div>
-					<div className="event-address">{eventItem.address}</div>
-					<Link to={{ pathname: "/review", query: { eventItem } }}>
-						<Button variant="primary">Review</Button>
-					</Link>
-				</div>
+				<EventRow item={eventItem}></EventRow>
 			)
 		}
 		fullPage = (
-			<div className="profile-container">
+			<div className="user-view-container">
 				<UserInfo />
-				<div className='user-incoming-events'>
-					{incomingEventsPage}
-				</div>
-				<div className='user-finished-events'>
-					{pastEventsPage}
+				<div className="user-events-container">
+					<div className='user-incoming-container'>
+						Incoming future events
+						{incomingEventsPage}
+					</div>
+					<div className='user-finished-events'>
+						Last finished events
+						{pastEventsPage}
+					</div>
 				</div>
 			</div>
 		)
