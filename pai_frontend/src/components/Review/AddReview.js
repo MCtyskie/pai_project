@@ -14,7 +14,7 @@ class AddReview extends React.Component {
         this.state = {
             isOpen: false,
             rating: 0,
-            comment: "",
+            description: "",
         }
         this.handleDialogOpen = this.handleDialogOpen.bind(this);
         this.handleDialogClose = this.handleDialogClose.bind(this);
@@ -39,7 +39,7 @@ class AddReview extends React.Component {
             let data = {
                 eventId: this.props.eventId,
                 rating: this.state.rating,
-                comment: this.state.comment,
+                description: this.state.description,
             }
             // TODO check endpoint in backend
             const backend_url = "http://localhost:8081/reviews/add_review";

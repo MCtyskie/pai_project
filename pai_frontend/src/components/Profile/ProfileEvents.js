@@ -2,6 +2,8 @@ import React from 'react';
 import EventRow from '../Event/EventRow';
 import Button from 'react-bootstrap/Button';
 import { Link } from "react-router-dom";
+import { AddReview } from '../Review/AddReview';
+import axios from 'axios';
 
 
 class ProfileEvents extends React.Component {
@@ -49,7 +51,8 @@ class ProfileEvents extends React.Component {
                 "maxGuests": "100",
                 "picture": "JPG",
                 "description": "witajcie na testowym evencie melo inferno jak sie macie panowie haha",
-                "isReviewed": true
+                "isReviewed": true,
+                "tags": [],
             },
             {
                 "title": "meloinferno",
@@ -60,7 +63,8 @@ class ProfileEvents extends React.Component {
                 "maxGuests": "100",
                 "picture": "JPG",
                 "description": "Drugi testowy event",
-                "isReviewed": false
+                "isReviewed": false,
+                "tags": [],
             }
         ]
         // for (const eventItem of this.state.eventList) {
@@ -68,9 +72,7 @@ class ProfileEvents extends React.Component {
             eventView.push(
                 <div>
                     <EventRow item={eventItem}></EventRow>
-                    {eventItem.isReviewed ? <Button disabled>Reviewed</Button> : <Link to={{ pathname: "/review", query: { eventItem } }}>
-                        <Button variant="primary">Review event</Button>
-                    </Link>}
+                    {eventItem.isReviewed ? <Button disabled>Reviewed</Button> : <AddReview eventId={eventItem.eventId}></AddReview>}
                     <Link to={{ pathname: "/event", query: { eventItem } }}>
                         <Button variant="primary">Check details</Button>
                     </Link>

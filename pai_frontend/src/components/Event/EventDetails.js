@@ -21,6 +21,7 @@ class EventDetails extends React.Component {
 
 	componentDidMount() {
 		console.log(this.props.location.query.eventItem);
+		// if location query is empty maybe get id somehow and fetch normally by backend request? change link to /event/<id> maybe?
 	}
 
 	fetchEventAllData() {
