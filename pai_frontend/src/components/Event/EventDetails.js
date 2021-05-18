@@ -5,6 +5,7 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-scroll'
 import Chip from '@material-ui/core/Chip';
+import { AddReview } from '../Review/AddReview';
 
 
 class EventDetails extends React.Component {
@@ -112,7 +113,7 @@ class EventDetails extends React.Component {
 				<div id="event-reviews">
 					{this.state.eventReviews}
 				</div>
-				<Button variant="primary">Add Review - TODO</Button>
+				<AddReview eventId={this.props.location.query.eventItem.eventId}></AddReview>
 			</div>
 		);
 	}
