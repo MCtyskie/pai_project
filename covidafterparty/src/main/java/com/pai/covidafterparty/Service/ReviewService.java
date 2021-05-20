@@ -7,7 +7,9 @@ import com.pai.covidafterparty.Repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -31,7 +33,7 @@ public class ReviewService {
     }
 
     //UPDATE
-    public Optional<Review> updateUser(Review review){
+    public Optional<Review> updateReview(Review review){
         Review r=reviewRepository.findReviewByReviewID(review.getReviewID()).get();
         if(r!=null){
             reviewRepository.save(review);
@@ -48,6 +50,12 @@ public class ReviewService {
             return Optional.of(r);
         }
         return Optional.empty();
+    }
+
+    public List<Review.ReviewJSON> getReviewsForUser(User user){
+        List<Review> list = reviewRepository.findByReviewer(user);
+        return list.stream().map(r -> r.getReviewJSON())
+                .collect(Collectors.toList());
     }
 
 

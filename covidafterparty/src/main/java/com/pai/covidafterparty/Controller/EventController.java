@@ -1,6 +1,7 @@
 package com.pai.covidafterparty.Controller;
 
 import com.pai.covidafterparty.Model.Event;
+import com.pai.covidafterparty.Model.User;
 import com.pai.covidafterparty.Repository.EventRepositoryCustom;
 import com.pai.covidafterparty.Repository.EventRepositoryCustomImpl;
 import com.pai.covidafterparty.Service.EventService;
@@ -89,6 +90,39 @@ public class EventController {
         } catch (Exception e) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/createEvent")
+    ResponseEntity<String> createEvent(Principal principal, @RequestBody Event.EventDetailsJSON eventDetailsJSON){
+        Optional<User> owner = userService.getUserByEmail(principal.getName());
+        if(owner.isPresent()) {
+            Event event = new Event(
+                    owner.get(),
+                    eventDetailsJSON.getTitle(),
+                    eventDetailsJSON.getCity(),
+                    eventDetailsJSON.getPostNumber(),
+                    eventDetailsJSON.getStreet(),
+                    eventDetailsJSON.getHouseNumber(),
+                    eventDetailsJSON.getApartmentNumber(),
+                    eventDetailsJSON.getEventDate(),
+                    eventDetailsJSON.getActivity(),
+                    eventDetailsJSON.getVisibility(),
+                    eventDetailsJSON.getTags(),
+                    eventDetailsJSON.getMaxGuests(),
+                    eventDetailsJSON.getCity(),
+                    eventDetailsJSON.getImages(),
+                    eventDetailsJSON.getAgeRestriction(),
+                    eventDetailsJSON.isOpenEvent()
+            );
+            if(eventService.addEvent(event).isPresent()){
+                return new ResponseEntity<>("Event added", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Event not added", HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>("No owner found", HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 

@@ -68,6 +68,48 @@ public class User {
         return new UserProfileJSON(name, lastName, email, city, phone, userID);
     }
 
+    public UserFullJSON getUserFullJSON(){
+        return new UserFullJSON(userID, name, lastName, email, password, birthdate, city, phone, activeAccount);
+    }
+
+    @Getter
+    @Setter
+    public static class UserFullJSON{
+        private long userID;
+        private String name;
+        private String lastName;
+        private String email;
+        private String password;
+        private LocalDate birthdate;
+        private String city;
+        private String phone;
+        private boolean activeAccount;
+
+        public UserFullJSON(long userID, String name, String lastName, String email, String password, LocalDate birthdate, String city, String phone, boolean activeAccount) {
+            this.userID = userID;
+            this.name = name;
+            this.lastName = lastName;
+            this.email = email;
+            this.password = password;
+            this.birthdate = birthdate;
+            this.city = city;
+            this.phone = phone;
+            this.activeAccount = activeAccount;
+        }
+
+        public UserFullJSON(){
+            this.userID = -1;
+            this.name = null;
+            this.lastName = null;
+            this.email = null;
+            this.city = null;
+            this.phone = null;
+            this.password = null;
+            this.birthdate = null;
+            this.activeAccount = false;
+        }
+    }
+
     @Getter
     @Setter
     public static class UserProfileJSON{

@@ -6,6 +6,7 @@ import com.pai.covidafterparty.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -77,7 +78,37 @@ public class UserController {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.UNAUTHORIZED);
         }
     }
+
+    @PostMapping("/createUser")
+    ResponseEntity<String> createUser(Principal principal, @RequestBody User.UserFullJSON userFullJSON){
+        User user = new User(
+                userFullJSON.getName(),
+                userFullJSON.getLastName(),
+                userFullJSON.getEmail(),
+                userFullJSON.getPassword(),
+                userFullJSON.getBirthdate(),
+                userFullJSON.getCity(),
+                userFullJSON.getPhone());
+        if(userService.addUser(user).isEmpty()){
+         return new ResponseEntity<>("User already exist", HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>("User added", HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/getUserByID")
+    @PreAuthorize("hasRole('ADMIN')")
+    ResponseEntity<User.UserFullJSON> getUserByID(@RequestParam long userID){
+        Optional<User> user = userService.getUserById(userID);
+        if(user.isPresent()){
+            return new ResponseEntity<>(user.get().getUserFullJSON(), HttpStatus.OK);
+        } else{
+            return new ResponseEntity<>(new User.UserFullJSON(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
+
+
 
 /*
 public ResponseEntity<String> addUser(User user){

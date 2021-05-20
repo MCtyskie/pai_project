@@ -4,8 +4,11 @@ import com.pai.covidafterparty.Model.Review;
 import com.pai.covidafterparty.Model.User;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ReviewRepository extends CrudRepository<Review, Long> {
     public Optional<Review> findReviewByReviewID(long reviewID);
+
+    public List<Review> findByReviewer(User reviewer);
 }
