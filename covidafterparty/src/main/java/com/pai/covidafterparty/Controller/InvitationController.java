@@ -29,7 +29,7 @@ public class InvitationController {
         return new ResponseEntity<>(invitationService.getInvitations(), HttpStatus.OK);
     }
 
-    @GetMapping("/invitations")
+    @GetMapping("/invitationsByEvent")
     ResponseEntity<List<Invitation>> getInvitationForEvent(@RequestParam long eventID){
         return new ResponseEntity<>(invitationService.getInvitationsForEvent(eventID), HttpStatus.OK);
     }

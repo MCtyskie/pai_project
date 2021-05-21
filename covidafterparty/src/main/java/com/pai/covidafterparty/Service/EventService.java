@@ -20,6 +20,9 @@ public class EventService {
     private EventRepository eventRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private EventRepositoryCustom eventRepositoryCustom;
 
     //CREATE
@@ -68,7 +71,7 @@ public class EventService {
 
     public List<Event.EventItemJSON> getIncomingEvents(User user){
         List<Event> resultList = new ArrayList<>();
-        eventRepository.findIncomingForUser(user.getUserID()).forEach(resultList::add);
+        eventRepository.findIncomingForUser(user).forEach(resultList::add);
         return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
     }
 

@@ -4,6 +4,7 @@ import com.pai.covidafterparty.Model.Event;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class EventRepositoryCustomImpl implements EventRepositoryCustom{
     @PersistenceContext
     private EntityManager entityManager;

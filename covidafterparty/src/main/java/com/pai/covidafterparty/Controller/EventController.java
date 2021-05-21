@@ -77,20 +77,20 @@ public class EventController {
         }
     }
 
-    @GetMapping("/incoming_events")
+    /*@GetMapping("/incoming_events")
     ResponseEntity<List<Event.EventItemJSON>> incomingEvents(Principal principal){
         List<Event.EventItemJSON> resultList = eventService.getIncomingEvents(userService.getUserByEmail(principal.getName()).get());
         return new ResponseEntity<>(resultList, HttpStatus.OK);
-    }
+    }*/
 
-    @GetMapping("/events_filter")
+    /*@GetMapping("/events_filter")
     ResponseEntity<List<Event.EventDetailsJSON>> getFilteredEvents(@RequestBody EventRepositoryCustomImpl.EventFilters eventFilters){
         try{
             return new ResponseEntity<>(eventService.getFilteredEvents(eventFilters), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         }
-    }
+    }*/
 
     @PostMapping("/createEvent")
     ResponseEntity<String> createEvent(Principal principal, @RequestBody Event.EventDetailsJSON eventDetailsJSON){
