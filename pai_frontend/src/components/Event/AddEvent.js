@@ -41,7 +41,7 @@ class AddEvent extends React.Component {
         const value = target.value;
         const name = target.name;
         this.setState({
-            [name]: value
+            [name]: target.type === "checkbox" ? target.checked : value
         });
     }
 
@@ -203,7 +203,7 @@ class AddEvent extends React.Component {
                     <Form.Check
                         type="checkbox"
                         name="open"
-                        onChange={this.handleChange}
+                        onClick={this.handleChange}
                         label="Open party?"
                     />
                 </Form.Group>
@@ -212,7 +212,7 @@ class AddEvent extends React.Component {
                     <Form.Check
                         type="checkbox"
                         name="ageRestriction"
-                        onChange={this.handleChange}
+                        onClick={this.handleChange}
                         label="Age restriction (over 18)?"
                     />
                 </Form.Group>
@@ -221,6 +221,7 @@ class AddEvent extends React.Component {
                     <Form.Label>Description</Form.Label>
                     <Form.Control as="textarea" name="description" onChange={this.handleChange} rows={3} />
                 </Form.Group>
+
                 <Form.Group controlId="inputTags" className="row-container">
                     <TextField id="tagsInput" value={this.state.tag} name="tag" label="Tag" variant="outlined" onChange={this.handleChange} />
                     <Button variant="primary" onClick={this.handleTagInput}>Add Tag</Button>

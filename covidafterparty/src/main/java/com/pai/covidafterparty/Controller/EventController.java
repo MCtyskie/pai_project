@@ -109,13 +109,13 @@ public class EventController {
                     eventDetailsJSON.getVisibility(),
                     eventDetailsJSON.getTags(),
                     eventDetailsJSON.getMaxGuests(),
-                    eventDetailsJSON.getCity(),
+                    eventDetailsJSON.getDescription(),
                     eventDetailsJSON.getImages(),
                     eventDetailsJSON.isAgeRestriction(),
                     eventDetailsJSON.isOpenEvent()
             );
             if (eventService.addEvent(event).isPresent()) {
-                return new ResponseEntity<>("Event added", HttpStatus.OK);
+                return new ResponseEntity<>("Event added", HttpStatus.CREATED);
             } else {
                 return new ResponseEntity<>("Event not added", HttpStatus.BAD_REQUEST);
             }

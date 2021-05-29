@@ -29,7 +29,7 @@ class EventView extends React.Component {
 		this.fetchAllCities = this.fetchAllCities.bind(this);
 		this.fetchAllEvents = this.fetchAllEvents.bind(this);
 		this.handleReset = this.handleReset.bind(this);
-		this.dummyEvents = this.dummyEvents.bind(this);
+		// this.dummyEvents = this.dummyEvents.bind(this);
 	}
 
 	componentDidMount() {
@@ -64,37 +64,37 @@ class EventView extends React.Component {
 			.catch(err => {
 				console.log(err);
 			})
-		this.dummyEvents();
+		// this.dummyEvents();
 	}
 
-	dummyEvents = () => {
-		this.setState({
-			eventList: [
-				{
-					"title": "meloinferno",
-					"date": "2021-04-19 19:00:00",
-					"address": "Bydgoszcz 85 - 435 Puławska 13",
-					"ageRestriction": true,
-					"invitationsAccepted": "23",
-					"maxGuests": "100",
-					"picture": "JPG",
-					"description": "witajcie na testowym evencie melo inferno jak sie macie panowie haha",
-					"tags": ["Dance", "Pop", "Biba"],
-				},
-				{
-					"title": "meloinferno",
-					"date": "2021-05-03 20:30:00",
-					"address": "Bydgoszcz 85 - 435 Puławska 13",
-					"ageRestriction": false,
-					"invitationsAccepted": "0",
-					"maxGuests": "100",
-					"picture": "JPG",
-					"description": "Drugi testowy event",
-					"tags": ["Rock", "Metal", "Alko"],
-				}
-			], isFetchingData: false
-		});
-	}
+	// dummyEvents = () => {
+	// 	this.setState({
+	// 		eventList: [
+	// 			{
+	// 				"title": "meloinferno",
+	// 				"date": "2021-04-19 19:00:00",
+	// 				"address": "Bydgoszcz 85 - 435 Puławska 13",
+	// 				"ageRestriction": true,
+	// 				"invitationsAccepted": "23",
+	// 				"maxGuests": "100",
+	// 				"picture": "JPG",
+	// 				"description": "witajcie na testowym evencie melo inferno jak sie macie panowie haha",
+	// 				"tags": ["Dance", "Pop", "Biba"],
+	// 			},
+	// 			{
+	// 				"title": "meloinferno",
+	// 				"date": "2021-05-03 20:30:00",
+	// 				"address": "Bydgoszcz 85 - 435 Puławska 13",
+	// 				"ageRestriction": false,
+	// 				"invitationsAccepted": "0",
+	// 				"maxGuests": "100",
+	// 				"picture": "JPG",
+	// 				"description": "Drugi testowy event",
+	// 				"tags": ["Rock", "Metal", "Alko"],
+	// 			}
+	// 		], isFetchingData: false
+	// 	});
+	// }
 
 	fetchAllCities() {
 		// const backend_url = "http://localhost:8081/api/event/cities";

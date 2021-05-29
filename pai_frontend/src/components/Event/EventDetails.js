@@ -64,9 +64,12 @@ class EventDetails extends React.Component {
 	}
 
 	render() {
-		let eventTags = []
-		this.props.location.query.eventItem.tags.forEach(tag => {
-            eventTags.push(<Chip color="primary" label={tag} />)
+		// Temporary as backend is not ready for array type yet
+		let eventTags = this.props.location.query.eventItem.tags.split(",");
+		let eventChips = [];
+		console.log(eventTags);
+		eventTags.forEach(tag => {
+            eventChips.push(<Chip color="primary" label={tag} />)
         })
 		return (
 			<div className="event-details-container">
@@ -81,7 +84,7 @@ class EventDetails extends React.Component {
 				<div className="row-container">
 					<div className="event-lower-info">Over 18?<Checkbox checked={this.props.location.query.eventItem.ageRestriction} disabed className="checkbox"></Checkbox></div>
 					<div className="event-lower-info">Invitations: {this.props.location.query.eventItem.invitationsAccepted}/{this.props.location.query.eventItem.maxGuests}</div>
-					<div className="event-lower-info">{eventTags}</div>
+					<div className="event-lower-info">{eventChips}</div>
 				</div>
 				<Button variant="primary" onClick={this.handleJoin}>Join Event</Button>
 				<div className="event-nav-details">
