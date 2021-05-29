@@ -27,8 +27,8 @@ public class EventService {
 
     //CREATE
     public Optional<Event> addEvent(Event event){
-        Event e=eventRepository.findEventByEventID(event.getEventID()).get();
-        if(e==null){
+        Optional<Event> e=eventRepository.findEventByEventID(event.getEventID());
+        if(e.isEmpty()){
             eventRepository.save(event);
             return Optional.of(event);
         }

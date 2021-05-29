@@ -26,14 +26,14 @@ public class EventController {
     UserService userService;
 
     @GetMapping("/events")
-    ResponseEntity<List<Event.EventItemJSON>> getEvents(){
+    ResponseEntity<List<Event.EventItemJSON>> getEvents() {
         return new ResponseEntity<>(eventService.getEvents(), HttpStatus.OK);
     }
 
     @GetMapping("/details")
-    ResponseEntity<Event.EventDetailsJSON> getEventDetails(@RequestParam long eventID){
+    ResponseEntity<Event.EventDetailsJSON> getEventDetails(@RequestParam long eventID) {
         Optional<Event> event = eventService.getEventById(eventID);
-        if(event.isPresent()){
+        if (event.isPresent()) {
             return new ResponseEntity<>(event.get().getEvenDetailsJSON(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(new Event.EventDetailsJSON(), HttpStatus.NOT_FOUND);
@@ -41,14 +41,14 @@ public class EventController {
     }
 
     @PutMapping("/edit")
-    ResponseEntity<String> editEvent(Principal principal, @RequestBody Event.EventDetailsJSON eventDetails, @RequestParam long eventID){
+    ResponseEntity<String> editEvent(Principal principal, @RequestBody Event.EventDetailsJSON eventDetails, @RequestParam long eventID) {
         Optional<Event> eventOptional = eventService.getEventById(eventID);
-        if(eventOptional.isPresent()){
+        if (eventOptional.isPresent()) {
             Event event = eventOptional.get();
             event.setEventDate(eventDetails.getEventDate());
             event.setActivity(eventDetails.getActivity());
             event.setOpenEvent(eventDetails.isOpenEvent());
-            event.setAgeRestriction(eventDetails.getAgeRestriction());
+            event.setAgeRestriction(eventDetails.isAgeRestriction());
             event.setCity(eventDetails.getCity());
             event.setDescription(eventDetails.getCity());
             event.setApartmentNumber(eventDetails.getApartmentNumber());
@@ -69,8 +69,8 @@ public class EventController {
     }
 
     @DeleteMapping("/delete")
-    ResponseEntity<String> deleteEvent(Principal principal, @RequestParam long eventID){
-        if(Optional.of(eventService.deleteEvent(eventID)).get().isPresent()){
+    ResponseEntity<String> deleteEvent(Principal principal, @RequestParam long eventID) {
+        if (Optional.of(eventService.deleteEvent(eventID)).get().isPresent()) {
             return new ResponseEntity<>("Event deleted", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Event not found", HttpStatus.NOT_FOUND);
@@ -93,9 +93,9 @@ public class EventController {
     }*/
 
     @PostMapping("/createEvent")
-    ResponseEntity<String> createEvent(Principal principal, @RequestBody Event.EventDetailsJSON eventDetailsJSON){
+    ResponseEntity<String> createEvent(Principal principal, @RequestBody Event.EventDetailsJSON eventDetailsJSON) {
         Optional<User> owner = userService.getUserByEmail(principal.getName());
-        if(owner.isPresent()) {
+        if (owner.isPresent()) {
             Event event = new Event(
                     owner.get(),
                     eventDetailsJSON.getTitle(),
@@ -111,10 +111,10 @@ public class EventController {
                     eventDetailsJSON.getMaxGuests(),
                     eventDetailsJSON.getCity(),
                     eventDetailsJSON.getImages(),
-                    eventDetailsJSON.getAgeRestriction(),
+                    eventDetailsJSON.isAgeRestriction(),
                     eventDetailsJSON.isOpenEvent()
             );
-            if(eventService.addEvent(event).isPresent()){
+            if (eventService.addEvent(event).isPresent()) {
                 return new ResponseEntity<>("Event added", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Event not added", HttpStatus.BAD_REQUEST);

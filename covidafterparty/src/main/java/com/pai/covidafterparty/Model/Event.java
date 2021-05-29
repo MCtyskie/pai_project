@@ -19,7 +19,7 @@ public class Event {
     private long eventID;
 
     @ManyToOne
-    @JoinColumn(name="owner_id", nullable=false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
     @ManyToMany
@@ -48,13 +48,13 @@ public class Event {
     private int maxGuests;
     private String description;
     private String images;
-    private int ageRestriction;
+    private boolean ageRestriction;
     private boolean openEvent;
 
     public Event(User owner, String title, String city, String postNumber, String street,
                  String houseNumber, String apartmentNumber, LocalDateTime eventDate,
                  Activity activity, Visibility visibility, String tags, int maxGuests,
-                 String description, String images, int ageRestriction, boolean openEvent) {
+                 String description, String images, boolean ageRestriction, boolean openEvent) {
         this.owner = owner;
         this.title = title;
         this.city = city;
@@ -79,17 +79,17 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private List<Review> reviews;
 
-    public EventItemJSON getEvenItemJSON(){
-        return new EventItemJSON(title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, images);
+    public EventItemJSON getEvenItemJSON() {
+        return new EventItemJSON(title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, description, images);
     }
 
-    public EventDetailsJSON getEvenDetailsJSON(){
-        return new EventDetailsJSON(title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, images, activity, visibility, openEvent);
+    public EventDetailsJSON getEvenDetailsJSON() {
+        return new EventDetailsJSON(title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, description, images, activity, visibility, openEvent);
     }
 
     @Getter
     @Setter
-    public static class EventItemJSON{
+    public static class EventItemJSON {
         private String title;
         private LocalDateTime eventDate;
 
@@ -99,13 +99,14 @@ public class Event {
         private String houseNumber;
         private String apartmentNumber;
 
-        private int ageRestriction;
+        private boolean ageRestriction;
         private int maxGuests;
         private String tags;
+        private String description;
 
         private String images;
 
-        public EventItemJSON(String title, LocalDateTime eventDate, String city, String postNumber, String street, String houseNumber, String apartmentNumber, int ageRestriction, int maxGuests, String tags, String images) {
+        public EventItemJSON(String title, LocalDateTime eventDate, String city, String postNumber, String street, String houseNumber, String apartmentNumber, boolean ageRestriction, int maxGuests, String tags, String description, String images) {
             this.title = title;
             this.eventDate = eventDate;
             this.city = city;
@@ -116,10 +117,11 @@ public class Event {
             this.ageRestriction = ageRestriction;
             this.maxGuests = maxGuests;
             this.tags = tags;
+            this.description = description;
             this.images = images;
         }
 
-        public EventItemJSON(){
+        public EventItemJSON() {
             this.title = null;
             this.eventDate = null;
             this.city = null;
@@ -127,7 +129,7 @@ public class Event {
             this.street = null;
             this.houseNumber = null;
             this.apartmentNumber = null;
-            this.ageRestriction = -1;
+            this.ageRestriction = false;
             this.maxGuests = -1;
             this.tags = null;
             this.images = null;
@@ -136,13 +138,13 @@ public class Event {
 
     @Getter
     @Setter
-    public static class EventDetailsJSON extends EventItemJSON{
+    public static class EventDetailsJSON extends EventItemJSON {
         private Activity activity;
         private Visibility visibility;
         private boolean openEvent;
 
-        public EventDetailsJSON(String title, LocalDateTime eventDate, String city, String postNumber, String street, String houseNumber, String apartmentNumber, int ageRestriction, int maxGuests, String tags, String images, Activity activity, Visibility visibility, boolean openEvent) {
-            super(title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, images);
+        public EventDetailsJSON(String title, LocalDateTime eventDate, String city, String postNumber, String street, String houseNumber, String apartmentNumber, boolean ageRestriction, int maxGuests, String tags, String description, String images, Activity activity, Visibility visibility, boolean openEvent) {
+            super(title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, description, images);
             this.activity = activity;
             this.visibility = visibility;
             this.openEvent = openEvent;

@@ -15,12 +15,14 @@ class AddEvent extends React.Component {
             city: "",
             postNumber: "",
             street: "",
+            houseNumber: "",
+            apartmentNumber: "",
             eventDate: "",
-            activity: false,
-            visibility: false,
+            activity: "ACTIVE",
+            visibility: "PUBLIC",
             tag: "",
             tags: [],
-            maxGuest: "",
+            maxGuests: "",
             description: "",
             ageRestriction: false,
             openEvent: false,
@@ -48,7 +50,7 @@ class AddEvent extends React.Component {
         if (tagsList.length > 9) {
             console.log("alert, no more than 10 tags");
         }
-        else if(this.state.tag.length >20){
+        else if (this.state.tag.length > 20) {
             console.log("Alert, no longer than 20 chars!");
         }
         else {
@@ -72,23 +74,37 @@ class AddEvent extends React.Component {
         }
         else {
             this.setState({ validated: true });
-            const backend_url = "http://localhost:8081/api/event/add";
+            const backend_url = "http://localhost:8081/api/event/createEvent";
+            let eventDateTime = this.state.date+"T"+this.state.time;
+            let tagsString = this.state.tags.join(",");
+            console.log(tagsString);
+            console.log(eventDateTime);
             axios.post(backend_url, {
                 title: this.state.title,
                 city: this.state.city,
                 postNumber: this.state.postNumber,
                 street: this.state.street,
-                eventDate: this.state.date,
-                // activity: this.state.activity, ??
+                houseNumber: this.state.houseNumber,
+                apartmentNumber: this.state.apartmentNumber,
+                date: this.state.date,
+                time: this.state.time,
+                eventDate: eventDateTime,
+                // activity: this.state.activity,
+                activity: "ACTIVE",
                 visibility: this.state.visibility,
-                tags: this.state.tags,
-                maxGuest: this.state.maxGuest,
+                // tags: this.state.tags, THIS will be the final version, but for now i will parse them to string bcs backend is not ready
+                tags: tagsString,
+                maxGuests: this.state.maxGuests,
                 description: this.state.description,
                 ageRestriction: this.state.ageRestriction,
                 openEvent: this.state.open,
+                images: "",
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
+                }
             }).then(response => {
                 console.log(response.data);
-                (response.status == 200) ? this.setState({ isLogged: true }) : this.setState({ isLogged: false })
             }).catch(err => {
                 console.log("something wrong happend");
                 console.log(err);
@@ -135,11 +151,35 @@ class AddEvent extends React.Component {
                         </Form.Control.Feedback>
                 </Form.Group>
 
+                <Form.Group controlId="formBasicHouseNumber">
+                    <Form.Label>House number</Form.Label>
+                    <Form.Control required type="number" name="houseNumber" onChange={this.handleChange} placeholder="Enter number" />
+                    <Form.Control.Feedback type="invalid">
+                        Please input a valid house number.
+                        </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId="formBasicApartmentNumber">
+                    <Form.Label>Apartment Number</Form.Label>
+                    <Form.Control required type="number" name="apartmentNumber" onChange={this.handleChange} placeholder="Enter number" />
+                    <Form.Control.Feedback type="invalid">
+                        Please input a valid apartment number.
+                        </Form.Control.Feedback>
+                </Form.Group>
+
                 <Form.Group controlId="formBasicEventDate">
                     <Form.Label>Date of Event</Form.Label>
                     <Form.Control required type="date" name="date" onChange={this.handleChange} />
                     <Form.Control.Feedback type="invalid">
                         Please input a valid date.
+                        </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId="formBasicEventTime">
+                    <Form.Label>Start time of Event at</Form.Label>
+                    <Form.Control required type="time" name="time" onChange={this.handleChange} />
+                    <Form.Control.Feedback type="invalid">
+                        Please input a valid time.
                         </Form.Control.Feedback>
                 </Form.Group>
 
@@ -152,12 +192,11 @@ class AddEvent extends React.Component {
                 </Form.Group>
 
                 <Form.Group>
-                    <Form.Check
-                        type="checkbox"
-                        name="visibility"
-                        onChange={this.handleChange}
-                        label="Event Visible now?"
-                    />
+                    <Form.Label>Visibility of Event</Form.Label>
+                    <Form.Control as="select" custom name="visibility" onChange={this.handleChange}> 
+                        <option>PUBLIC</option>
+                        <option>PRIVATE</option>
+                    </Form.Control>
                 </Form.Group>
 
                 <Form.Group>
@@ -190,7 +229,7 @@ class AddEvent extends React.Component {
                     {tags}
                 </Form.Group>
 
-                <Button variant="primary" className="submit-btn" type="submit">
+                <Button variant="primary" onClick={this.handleAdd} className="submit-btn" type="submit">
                     Create Event!
                     </Button>
             </Form>);
