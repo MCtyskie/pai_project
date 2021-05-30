@@ -18,7 +18,10 @@ class ReviewItem extends React.Component{
         // TODO styles and improve looks, temp version under
         return(
             <>
-                <EventRow item={this.props.review.event}></EventRow>
+                {/* <EventRow item={this.props.review.event}></EventRow> */}
+                <div className="">
+                    {this.props.review.eventID}
+                </div>
                 <div className="">
                     {this.props.review.rate}
                 </div>

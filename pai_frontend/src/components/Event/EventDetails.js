@@ -12,17 +12,19 @@ class EventDetails extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isFetchingData: true,
+			eventItem: null,
 			eventInvitations: [],
 			eventReviews: [],
 		}
+		this.prepareEventDetailsView = this.prepareEventDetailsView.bind(this);
 		this.fetchEventAllData = this.fetchEventAllData.bind(this);
 		this.handleJoin = this.handleJoin.bind(this);
 	}
 
 	componentDidMount() {
-		console.log(this.props.location.query.eventItem);
-		// if location query is empty maybe get id somehow and fetch normally by backend request? change link to /event/<id> maybe?
-		this.fetchEventAllData();
+		this.setState({eventItem: this.props.location.query.eventItem }, () => this.fetchEventAllData());
+		// if location query is empty maybe store ID somehow and fetch normally by backend request? change link to /event/<id> maybe?
 	}
 
 	fetchEventAllData() {
@@ -32,15 +34,16 @@ class EventDetails extends React.Component {
 				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
 			},
 			params: {
-				eventID: this.props.location.query.eventItem.eventID,
+				eventID: this.state.eventItem.eventID,
 			}
 		})
 			.then(response => {
 				console.log(response.data);
-				this.setState({ eventInvitations: response.data.invitations, eventReviews: response.data.reviews });
+				this.setState({ eventInvitations: response.data.invitations, eventReviews: response.data.reviews, isFetchingData: false });
 			})
 			.catch(err => {
 				console.log(err);
+				this.setState({ isFetchingData: false });
 			})
 	}
 
@@ -52,7 +55,7 @@ class EventDetails extends React.Component {
 				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
 			},
 			params: {
-				eventID: this.props.location.query.eventItem.eventId,
+				eventID: this.state.eventItem.eventId,
 			}
 		})
 			.then(response => {
@@ -63,26 +66,26 @@ class EventDetails extends React.Component {
 			})
 	}
 
-	render() {
-		// Temporary as backend is not ready for array type yet
-		let eventTags = this.props.location.query.eventItem.tags.split(",");
+	prepareEventDetailsView() {
+		// TODO Temporary as backend is not ready for array type yet
+		let eventTags = this.state.eventItem.tags.split(",");
 		let eventChips = [];
 		eventTags.forEach(tag => {
-            eventChips.push(<Chip color="primary" label={tag} />)
-        })
+			eventChips.push(<Chip color="primary" label={tag} />)
+		})
 		return (
 			<div className="event-details-container">
 				<div className="event-title">
-					{this.props.location.query.eventItem.title}
+					{this.state.eventItem.title}
 				</div>
 				<div className="row-container">
-					<div className="event-photo">{this.props.location.query.eventItem.picture}</div>
-					<div className="event-main-info">{this.props.location.query.eventItem.date}</div>
-					<div className="event-main-info">{this.props.location.query.eventItem.address}</div>
+					<div className="event-photo">{this.state.eventItem.picture}</div>
+					<div className="event-main-info">{this.state.eventItem.date}</div>
+					<div className="event-main-info">{this.state.eventItem.city}, {this.state.eventItem.street}</div>
 				</div>
 				<div className="row-container">
-					<div className="event-lower-info">Over 18?<Checkbox checked={this.props.location.query.eventItem.ageRestriction} disabed className="checkbox"></Checkbox></div>
-					<div className="event-lower-info">Invitations: {this.props.location.query.eventItem.invitationsAccepted}/{this.props.location.query.eventItem.maxGuests}</div>
+					<div className="event-lower-info">Over 18?<Checkbox checked={this.state.eventItem.ageRestriction} disabed className="checkbox"></Checkbox></div>
+					<div className="event-lower-info">Invitations: {this.state.eventItem.invitationsAccepted}/{this.state.eventItem.maxGuests}</div>
 					<div className="event-lower-info">{eventChips}</div>
 				</div>
 				<Button variant="primary" onClick={this.handleJoin}>Join Event</Button>
@@ -108,7 +111,7 @@ class EventDetails extends React.Component {
 				</div>
 
 				<div id="description">
-					{this.props.location.query.eventItem.description}
+					{this.state.eventItem.description}
 				</div>
 				<div id="event-invitations">
 					{this.state.eventInvitations}
@@ -119,6 +122,15 @@ class EventDetails extends React.Component {
 				<AddReview eventID={this.props.location.query.eventItem.eventID}></AddReview>
 			</div>
 		);
+	}
+
+	render() {
+		return (
+			<>
+				{this.state.isFetchingData ? "fetching data..." : this.prepareEventDetailsView()}
+			</>
+		)
+
 	}
 }
 

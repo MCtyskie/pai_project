@@ -12,7 +12,7 @@ class EventRow extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.item);
+        // console.log(this.props.item);
     }
 
 

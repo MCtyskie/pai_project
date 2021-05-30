@@ -7,19 +7,18 @@ class ReviewView extends React.Component {
         super(props);
         this.state = {
             reviewsList: [],
-            isFetchingData: false,
+            isFetchingData: true,
         }
         this.fetchReviews = this.fetchReviews.bind(this);
         this.prepareReviewsView = this.prepareReviewsView.bind(this);
     }
 
     componentDidMount() {
-        console.log("loaded Invitation view");
+        this.fetchReviews();
     }
 
     fetchReviews() {
-        // TODO check name implemented in backend
-        const backend_url = "http://localhost:8081/api/reviews/reviewed";
+        const backend_url = "http://localhost:8081/review/getReviews";
         axios.get(backend_url, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,

@@ -16,7 +16,7 @@ class ManageEvents extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchOrganisedEvents();
+        this.setState({ isFetchingData: true }, () => this.fetchOrganisedEvents());
     }
 
     fetchOrganisedEvents() {
@@ -37,10 +37,10 @@ class ManageEvents extends React.Component {
 
     prepareUserOwnedEvents() {
         let eventView = [];
-        if(this.state.eventList.length > 0 ){
+        if (this.state.eventList.length > 0) {
             for (const eventItem of this.state.eventList) {
                 eventView.push(
-                    <div>
+                    <div key={eventItem.eventID}>
                         <EventRow item={eventItem}></EventRow>
                         <Link to={{ pathname: "/event", query: { eventItem } }}>
                             <Button variant="primary">Check details</Button>
@@ -52,7 +52,7 @@ class ManageEvents extends React.Component {
                 )
             }
         }
-        else{
+        else {
             eventView.push(<div>No event organised, maybe start one?</div>)
         }
         return eventView;

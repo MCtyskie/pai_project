@@ -19,7 +19,7 @@ class EventListing extends React.Component {
 		if (this.props.events.length !== 0) {
 			for (const eventItem of this.props.events) {
 				eventPage.push(
-					<Link to={{ pathname: "/event", query: { eventItem } }}>
+					<Link key={eventItem.eventID} to={{ pathname: "/event", query: { eventItem } }}>
 						<EventCard item={eventItem}></EventCard>
 					</Link>
 				)
