@@ -80,4 +80,9 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
+    public List<Event.EventItemJSON> getEventsOrganisedByUser(User user){
+        List<Event> resultList = new ArrayList<>(eventRepository.findEventByOwner(user));
+        return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
+    }
+
 }

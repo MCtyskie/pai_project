@@ -46,7 +46,7 @@ class EventDetails extends React.Component {
 
 	handleJoin() {
 		// TODO check name implemented in backend
-		const backend_url = "http://localhost:8081/api/event/event_join";
+		const backend_url = "http://localhost:8081/api/event/join";
 		axios.get(backend_url, {
 			headers: {
 				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
@@ -67,7 +67,6 @@ class EventDetails extends React.Component {
 		// Temporary as backend is not ready for array type yet
 		let eventTags = this.props.location.query.eventItem.tags.split(",");
 		let eventChips = [];
-		console.log(eventTags);
 		eventTags.forEach(tag => {
             eventChips.push(<Chip color="primary" label={tag} />)
         })

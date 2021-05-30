@@ -23,4 +23,6 @@ public interface EventRepository extends CrudRepository<Event, Long> {
     @Query("SELECT e FROM Event e WHERE e.eventID IN (SELECT i.event.eventID  FROM Invitation i WHERE i.invited = ?1 AND i.status LIKE 'ACCEPTED') AND e.eventDate < NOW() ORDER BY e.eventDate")
     public List<Event> findFinishedForUser(User user);
 
+    public List<Event> findEventByOwner(User user);
+
 }

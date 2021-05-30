@@ -6,6 +6,7 @@ import com.pai.covidafterparty.Repository.EventRepositoryCustom;
 import com.pai.covidafterparty.Repository.EventRepositoryCustomImpl;
 import com.pai.covidafterparty.Service.EventService;
 import com.pai.covidafterparty.Service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -123,6 +124,13 @@ public class EventController {
             return new ResponseEntity<>("No owner found", HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @GetMapping("/manageEvents")
+    ResponseEntity<List<Event.EventItemJSON>> getUserEvents(Principal principal) {
+        Optional<User> owner = userService.getUserByEmail(principal.getName());
+        return owner.map(user -> new ResponseEntity<>(eventService.getEventsOrganisedByUser(user), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST));
     }
 
 

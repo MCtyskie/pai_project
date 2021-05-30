@@ -41,7 +41,6 @@ class AddReview extends React.Component {
                 rate: this.state.rating,
                 description: this.state.comment,
             }
-            console.log(data);
             const backend_url = "http://localhost:8081/review/addReview";
             axios.post(backend_url, data, {
                 headers: {
