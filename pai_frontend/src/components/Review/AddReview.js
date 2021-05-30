@@ -14,7 +14,7 @@ class AddReview extends React.Component {
         this.state = {
             isOpen: false,
             rating: 0,
-            description: "",
+            comment: "",
         }
         this.handleDialogOpen = this.handleDialogOpen.bind(this);
         this.handleDialogClose = this.handleDialogClose.bind(this);
@@ -37,12 +37,12 @@ class AddReview extends React.Component {
     handleDialogAdd() {
         this.setState({ isOpen: false }, () => {
             let data = {
-                eventId: this.props.eventId,
-                rating: this.state.rating,
-                description: this.state.description,
+                eventID: this.props.eventID,
+                rate: this.state.rating,
+                description: this.state.comment,
             }
-            // TODO check endpoint in backend
-            const backend_url = "http://localhost:8081/reviews/add_review";
+            console.log(data);
+            const backend_url = "http://localhost:8081/review/addReview";
             axios.post(backend_url, data, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,

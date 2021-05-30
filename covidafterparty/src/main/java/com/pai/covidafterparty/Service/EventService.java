@@ -37,14 +37,13 @@ public class EventService {
 
     //READ
     public Optional<Event> getEventById(long eventID){
-        Event event = eventRepository.findEventByEventID(eventID).get();
-        return Optional.of(event);
+        return eventRepository.findEventByEventID(eventID);
     }
 
     //UPDATE
     public Optional<Event> updateEvent(Event event){
-        Event e=eventRepository.findEventByEventID(event.getEventID()).get();
-        if(e!=null){
+        Optional<Event> e=eventRepository.findEventByEventID(event.getEventID());
+        if(e.isPresent()){
             eventRepository.save(event);
             return Optional.of(event);
         }

@@ -22,17 +22,17 @@ class EventDetails extends React.Component {
 	componentDidMount() {
 		console.log(this.props.location.query.eventItem);
 		// if location query is empty maybe get id somehow and fetch normally by backend request? change link to /event/<id> maybe?
+		this.fetchEventAllData();
 	}
 
 	fetchEventAllData() {
-		// TODO check name implemented in backend
-		const backend_url = "http://localhost:8081/api/event/events_details";
+		const backend_url = "http://localhost:8081/api/event/details";
 		axios.get(backend_url, {
 			headers: {
 				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
 			},
 			params: {
-				eventID: this.props.location.query.eventItem.eventId,
+				eventID: this.props.location.query.eventItem.eventID,
 			}
 		})
 			.then(response => {
@@ -117,7 +117,7 @@ class EventDetails extends React.Component {
 				<div id="event-reviews">
 					{this.state.eventReviews}
 				</div>
-				<AddReview eventId={this.props.location.query.eventItem.eventId}></AddReview>
+				<AddReview eventID={this.props.location.query.eventItem.eventID}></AddReview>
 			</div>
 		);
 	}

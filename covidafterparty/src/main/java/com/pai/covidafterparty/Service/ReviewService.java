@@ -17,9 +17,9 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     //CREATE
-    public Optional<Review> addReview(Review review){
-        Review r=reviewRepository.findReviewByReviewID(review.getReviewID()).get();
-        if(r==null){
+    public Optional<Review> addReview(Review review) {
+        Optional<Review> r = reviewRepository.findReviewByReviewID(review.getReviewID());
+        if (r.isEmpty()) {
             reviewRepository.save(review);
             return Optional.of(review);
         }
@@ -27,15 +27,14 @@ public class ReviewService {
     }
 
     //READ
-    public Optional<Review> getReviewById(long reviewID){
-        Review review = reviewRepository.findReviewByReviewID(reviewID).get();
-        return Optional.of(review);
+    public Optional<Review> getReviewById(long reviewID) {
+        return reviewRepository.findReviewByReviewID(reviewID);
     }
 
     //UPDATE
-    public Optional<Review> updateReview(Review review){
-        Review r=reviewRepository.findReviewByReviewID(review.getReviewID()).get();
-        if(r!=null){
+    public Optional<Review> updateReview(Review review) {
+        Optional<Review> r = reviewRepository.findReviewByReviewID(review.getReviewID());
+        if (r.isPresent()) {
             reviewRepository.save(review);
             return Optional.of(review);
         }
@@ -43,16 +42,16 @@ public class ReviewService {
     }
 
     //DELETE
-    public Optional<Review> deleteReview(long reviewID){
-        Review r=reviewRepository.findReviewByReviewID(reviewID).get();
-        if(r!=null){
+    public Optional<Review> deleteReview(long reviewID) {
+        Review r = reviewRepository.findReviewByReviewID(reviewID).get();
+        if (r != null) {
             reviewRepository.delete(r);
             return Optional.of(r);
         }
         return Optional.empty();
     }
 
-    public List<Review.ReviewJSON> getReviewsForUser(User user){
+    public List<Review.ReviewJSON> getReviewsForUser(User user) {
         List<Review> list = reviewRepository.findByReviewer(user);
         return list.stream().map(r -> r.getReviewJSON())
                 .collect(Collectors.toList());
