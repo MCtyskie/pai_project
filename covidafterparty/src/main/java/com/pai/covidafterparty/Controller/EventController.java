@@ -53,7 +53,6 @@ public class EventController {
             event.setCity(eventDetails.getCity());
             event.setDescription(eventDetails.getCity());
             event.setApartmentNumber(eventDetails.getApartmentNumber());
-            event.setHouseNumber(eventDetails.getHouseNumber());
             event.setImages(eventDetails.getImages());
             event.setMaxGuests(eventDetails.getMaxGuests());
             event.setPostNumber(eventDetails.getPostNumber());
@@ -103,7 +102,6 @@ public class EventController {
                     eventDetailsJSON.getCity(),
                     eventDetailsJSON.getPostNumber(),
                     eventDetailsJSON.getStreet(),
-                    eventDetailsJSON.getHouseNumber(),
                     eventDetailsJSON.getApartmentNumber(),
                     eventDetailsJSON.getEventDate(),
                     eventDetailsJSON.getActivity(),
@@ -133,5 +131,9 @@ public class EventController {
                 .orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST));
     }
 
+    @GetMapping("/cities")
+    ResponseEntity<List<String>> getCitiesList() {
+        return new ResponseEntity<>(eventService.getEventCities(), HttpStatus.OK);
+    }
 
 }

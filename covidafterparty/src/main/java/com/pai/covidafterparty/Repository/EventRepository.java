@@ -25,4 +25,7 @@ public interface EventRepository extends CrudRepository<Event, Long> {
 
     public List<Event> findEventByOwner(User user);
 
+    @Query("SELECT DISTINCT e.city FROM Event e")
+    List<String> findDistinctCities();
+
 }

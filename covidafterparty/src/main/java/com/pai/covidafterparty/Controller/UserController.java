@@ -21,28 +21,28 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    public UserController(UserService userService){
-        this.userService=userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    ResponseEntity<String> createUser(User user){
-        if(Optional.of(userService.addUser(user)).get().isPresent()){
+    ResponseEntity<String> createUser(User user) {
+        if (Optional.of(userService.addUser(user)).get().isPresent()) {
             return new ResponseEntity<>("User saved correctly", HttpStatus.OK);
         }
         return new ResponseEntity<>("User already exists", HttpStatus.NOT_ACCEPTABLE);
     }
 
     @GetMapping("/profile")
-    ResponseEntity<User.UserProfileJSON> getUserProfile(Principal principal){
+    ResponseEntity<User.UserProfileJSON> getUserProfile(Principal principal) {
         User.UserProfileJSON userJSON = userService.getUserProfileJSONbyEmail(principal.getName());
-        if(userJSON != null) return new ResponseEntity<>(userJSON, HttpStatus.OK);
+        if (userJSON != null) return new ResponseEntity<>(userJSON, HttpStatus.OK);
         return new ResponseEntity<>(new User.UserProfileJSON(), HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/edit")
-    ResponseEntity<String> editUser(Principal principal, @RequestBody User.UserProfileJSON userJSON){
+    ResponseEntity<String> editUser(Principal principal, @RequestBody User.UserProfileJSON userJSON) {
         Optional<User> userOptional = userService.getUserByEmail(principal.getName());
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             try {
                 User user = userOptional.get();
                 user.setName(userJSON.getLastName());
@@ -51,16 +51,15 @@ public class UserController {
                 user.setPhone(userJSON.getPhone());
                 userService.updateUser(user);
                 return new ResponseEntity<>("User edited", HttpStatus.OK);
-            } catch(Exception e){
+            } catch (Exception e) {
                 return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
             }
-        }
-        else return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>("Bad request", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/delete")
-    ResponseEntity<String> deleteUser(Principal principal, @RequestParam long userID){
-        if(Optional.of(userService.deleteUser(userService.getUserByEmail(principal.getName()).get().getUserID())).get().isPresent()){
+    ResponseEntity<String> deleteUser(Principal principal, @RequestParam long userID) {
+        if (Optional.of(userService.deleteUser(userService.getUserByEmail(principal.getName()).get().getUserID())).get().isPresent()) {
             return new ResponseEntity<>("User with ID: " + userID + " deleted successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
@@ -68,9 +67,10 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    ResponseEntity<List<User>> getUserProfiles(Principal principal){
-        User user = userService.getUserByEmail(principal.getName()).get();
-        if(user.getRoles().stream().anyMatch(r -> r.getUserRole().equals("ROLE_ADMIN"))) {
+    @PreAuthorize("hasRole('ADMIN')")
+    ResponseEntity<List<User>> getUserProfiles(Principal principal) {
+        Optional<User> user = userService.getUserByEmail(principal.getName());
+        if (user.isPresent()) {
             List<User> usersList = userService.getUsers();
             if (!usersList.isEmpty()) return new ResponseEntity<>(usersList, HttpStatus.OK);
             return new ResponseEntity<>(usersList, HttpStatus.NO_CONTENT);
@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @PostMapping("/createUser")
-    ResponseEntity<String> createUser(Principal principal, @RequestBody User.UserFullJSON userFullJSON){
+    ResponseEntity<String> createUser(Principal principal, @RequestBody User.UserFullJSON userFullJSON) {
         User user = new User(
                 userFullJSON.getName(),
                 userFullJSON.getLastName(),
@@ -89,20 +89,20 @@ public class UserController {
                 userFullJSON.getBirthdate(),
                 userFullJSON.getCity(),
                 userFullJSON.getPhone());
-        if(userService.addUser(user).isEmpty()){
-         return new ResponseEntity<>("User already exist", HttpStatus.BAD_REQUEST);
-        }else {
+        if (userService.addUser(user).isEmpty()) {
+            return new ResponseEntity<>("User already exist", HttpStatus.BAD_REQUEST);
+        } else {
             return new ResponseEntity<>("User added", HttpStatus.OK);
         }
     }
 
     @GetMapping("/getUserByID")
     @PreAuthorize("hasRole('ADMIN')")
-    ResponseEntity<User.UserFullJSON> getUserByID(@RequestParam long userID){
+    ResponseEntity<User.UserFullJSON> getUserByID(@RequestParam long userID) {
         Optional<User> user = userService.getUserById(userID);
-        if(user.isPresent()){
+        if (user.isPresent()) {
             return new ResponseEntity<>(user.get().getUserFullJSON(), HttpStatus.OK);
-        } else{
+        } else {
             return new ResponseEntity<>(new User.UserFullJSON(), HttpStatus.NOT_FOUND);
         }
     }

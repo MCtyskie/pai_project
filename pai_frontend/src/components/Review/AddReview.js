@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
+import Alert from 'react-bootstrap/Alert'
 
 class AddReview extends React.Component {
     constructor(props) {
@@ -15,6 +16,8 @@ class AddReview extends React.Component {
             isOpen: false,
             rating: 0,
             comment: "",
+            isResponseSent: false,
+            isResponseError: false,
         }
         this.handleDialogOpen = this.handleDialogOpen.bind(this);
         this.handleDialogClose = this.handleDialogClose.bind(this);
@@ -49,9 +52,12 @@ class AddReview extends React.Component {
             })
                 .then(response => {
                     console.log(response.status);
+                    response.status === 201 ? this.setState({isResponseSent: true, isResponseError: false}) : 
+                    this.setState({isResponseError: true});
                 })
                 .catch(err => {
                     console.log(err);
+                    this.setState({isResponseError: true});
                 })
         });
     }
@@ -72,9 +78,19 @@ class AddReview extends React.Component {
 
 
     render() {
+        if (this.state.isResponseError) {
+			return <Alert variant="warning">
+				<Alert.Heading>
+					Couldn't load data
+				</Alert.Heading>
+				Something happend during data transfer...<br/>
+				<Alert.Link href="/#">Go back to menu</Alert.Link>
+				</Alert>
+		}
         return (
             <>
                 <Button variant="primary" onClick={this.handleDialogOpen}>Add Review</Button>
+                {this.state.isResponseSent ? <Alert variant="success">Added comment, Thank you!</Alert>: <div></div>}
                 <Dialog open={this.state.isOpen} onClose={this.handleDialogClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Review</DialogTitle>
                     <DialogContent>

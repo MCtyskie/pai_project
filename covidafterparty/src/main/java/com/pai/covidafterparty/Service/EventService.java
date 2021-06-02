@@ -85,4 +85,8 @@ public class EventService {
         return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
     }
 
+    public List<String> getEventCities(){
+        return eventRepository.findDistinctCities();
+    }
+
 }

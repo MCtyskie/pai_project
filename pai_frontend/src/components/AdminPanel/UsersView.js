@@ -7,7 +7,7 @@ class UsersView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isFetchingData: false,
+            isFetchingData: true,
             usersList: [],
         }
         this.getAllUsers=this.getAllUsers.bind(this);
@@ -15,25 +15,24 @@ class UsersView extends React.Component {
     }
 
     componentDidMount() {
-        console.log("loaded Admin panel");
         this.getAllUsers();
     }
 
     getAllUsers() {
-        // this.setState({ isFetchingData: true });
-        // const backend_url = "http://localhost:8081/user/users";
-        // axios.get(backend_url, {
-        // 	headers: {
-        // 		"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
-        // 	}
-        // })
-        // 	.then(response => {
-        // 		this.setState({ usersList: response.data, isFetchingData: false });
-        // 	})
-        // 	.catch(err => {
-        // 		console.log(err);
-        // 		this.setState({ isFetchingData: false });
-        // 	})
+        const backend_url = "http://localhost:8081/api/user/users";
+        axios.get(backend_url, {
+        	headers: {
+        		"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
+        	}
+        })
+        	.then(response => {
+                console.log(response.data);
+        		this.setState({ usersList: response.data, isFetchingData: false });
+        	})
+        	.catch(err => {
+        		console.log(err);
+        		this.setState({ isFetchingData: false });
+        	})
     }
 
     prepareUsersTable() {
@@ -50,7 +49,7 @@ class UsersView extends React.Component {
                     </thead>
                     <tbody>
                         {
-                            this.state.eventList.map((r, i) => (
+                            this.state.usersList.map((r, i) => (
                                 <tr key={i}>{
                                     Object.values(r).map((resval, j) => <td key={j}>{resval.toString()}</td>)
                                 }

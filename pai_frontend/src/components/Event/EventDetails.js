@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import { Link } from 'react-scroll'
 import Chip from '@material-ui/core/Chip';
 import { AddReview } from '../Review/AddReview';
+import Alert from 'react-bootstrap/Alert'
 
 
 class EventDetails extends React.Component {
@@ -13,6 +14,7 @@ class EventDetails extends React.Component {
 		super(props);
 		this.state = {
 			isFetchingData: true,
+			isFetchingError: false,
 			eventItem: null,
 			eventInvitations: [],
 			eventReviews: [],
@@ -23,7 +25,7 @@ class EventDetails extends React.Component {
 	}
 
 	componentDidMount() {
-		this.setState({eventItem: this.props.location.query.eventItem }, () => this.fetchEventAllData());
+		this.setState({ eventItem: this.props.location.query.eventItem }, () => this.fetchEventAllData());
 		// if location query is empty maybe store ID somehow and fetch normally by backend request? change link to /event/<id> maybe?
 	}
 
@@ -39,11 +41,16 @@ class EventDetails extends React.Component {
 		})
 			.then(response => {
 				console.log(response.data);
-				this.setState({ eventInvitations: response.data.invitations, eventReviews: response.data.reviews, isFetchingData: false });
+				this.setState({
+					eventInvitations: response.data.invitations,
+					eventReviews: response.data.reviews,
+					isFetchingData: false,
+					isFetchingError: false,
+				});
 			})
 			.catch(err => {
 				console.log(err);
-				this.setState({ isFetchingData: false });
+				this.setState({ isFetchingData: false, isFetchingError: true });
 			})
 	}
 
@@ -60,9 +67,11 @@ class EventDetails extends React.Component {
 		})
 			.then(response => {
 				console.log(response.data);
+				this.setState({ isFetchingError: false });
 			})
 			.catch(err => {
 				console.log(err);
+				this.setState({ isFetchingError: true });
 			})
 	}
 
@@ -72,7 +81,10 @@ class EventDetails extends React.Component {
 		let eventChips = [];
 		eventTags.forEach(tag => {
 			eventChips.push(<Chip color="primary" label={tag} />)
-		})
+		});
+		let eventAddress = this.state.eventItem.city + ", " + this.state.eventItem.street + " ";
+		this.state.eventItem.houseNumber != 0 ? eventAddress.concat(this.state.eventItem.houseNumber) : eventAddress.concat(this.state.eventItem.apartmentNumber);
+		console.log(eventAddress);
 		return (
 			<div className="event-details-container">
 				<div className="event-title">
@@ -81,7 +93,7 @@ class EventDetails extends React.Component {
 				<div className="row-container">
 					<div className="event-photo">{this.state.eventItem.picture}</div>
 					<div className="event-main-info">{this.state.eventItem.date}</div>
-					<div className="event-main-info">{this.state.eventItem.city}, {this.state.eventItem.street}</div>
+					<div className="event-main-info">{eventAddress}</div>
 				</div>
 				<div className="row-container">
 					<div className="event-lower-info">Over 18?<Checkbox checked={this.state.eventItem.ageRestriction} disabed className="checkbox"></Checkbox></div>
@@ -125,6 +137,15 @@ class EventDetails extends React.Component {
 	}
 
 	render() {
+		if (this.state.isFetchingError) {
+			return <Alert variant="warning">
+				<Alert.Heading>
+					Failed to get/send data
+				</Alert.Heading>
+				Something happend during data transfer...<br/>
+				<Alert.Link href="/events">Go back to previous page</Alert.Link>
+				</Alert>
+		}
 		return (
 			<>
 				{this.state.isFetchingData ? "fetching data..." : this.prepareEventDetailsView()}

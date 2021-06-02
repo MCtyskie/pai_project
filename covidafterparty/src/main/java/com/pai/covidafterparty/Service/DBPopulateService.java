@@ -79,7 +79,7 @@ public class DBPopulateService {
             maxGuests *= 100;
             visibility = Visibility.PUBLIC;
             if (random.nextInt(10) > 7) visibility = Visibility.PRIVATE;
-            er.save(new Event(users.iterator().next(), "Title" + (i + 1), randomCity, "11-11" + randomCity.charAt(5), "Street " + (i + 1), "HouseNumber" + (i + 1), "ApartmentNumber" + (i + 1), eventDate,
+            er.save(new Event(users.iterator().next(), "Title" + (i + 1), randomCity, "11-11" + randomCity.charAt(5), "Street " + (i + 1), "ApartmentNumber" + (i + 1), eventDate,
                     activities[random.nextInt(activities.length)], visibility, tags, maxGuests, "Description" + (i + 1), "", false, random.nextBoolean()));
         }
     }

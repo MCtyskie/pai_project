@@ -15,7 +15,6 @@ class AddEvent extends React.Component {
             city: "",
             postNumber: "",
             street: "",
-            houseNumber: "",
             apartmentNumber: "",
             eventDate: "",
             activity: "ACTIVE",
@@ -84,7 +83,6 @@ class AddEvent extends React.Component {
                 city: this.state.city,
                 postNumber: this.state.postNumber,
                 street: this.state.street,
-                houseNumber: this.state.houseNumber,
                 apartmentNumber: this.state.apartmentNumber,
                 date: this.state.date,
                 time: this.state.time,
@@ -151,16 +149,9 @@ class AddEvent extends React.Component {
                         </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group controlId="formBasicHouseNumber">
-                    <Form.Label>House number</Form.Label>
-                    <Form.Control required type="number" name="houseNumber" onChange={this.handleChange} placeholder="Enter number" />
-                    <Form.Control.Feedback type="invalid">
-                        Please input a valid house number.
-                        </Form.Control.Feedback>
-                </Form.Group>
 
                 <Form.Group controlId="formBasicApartmentNumber">
-                    <Form.Label>Apartment Number</Form.Label>
+                    <Form.Label>Apartment/House Number</Form.Label>
                     <Form.Control required type="number" name="apartmentNumber" onChange={this.handleChange} placeholder="Enter number" />
                     <Form.Control.Feedback type="invalid">
                         Please input a valid apartment number.

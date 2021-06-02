@@ -37,7 +37,6 @@ public class Event {
     private String city;
     private String postNumber;
     private String street;
-    private String houseNumber;
     private String apartmentNumber;
 
     private LocalDateTime eventDate;
@@ -51,16 +50,14 @@ public class Event {
     private boolean ageRestriction;
     private boolean openEvent;
 
-    public Event(User owner, String title, String city, String postNumber, String street,
-                 String houseNumber, String apartmentNumber, LocalDateTime eventDate,
-                 Activity activity, Visibility visibility, String tags, int maxGuests,
+    public Event(User owner, String title, String city, String postNumber, String street, String apartmentNumber,
+                 LocalDateTime eventDate, Activity activity, Visibility visibility, String tags, int maxGuests,
                  String description, String images, boolean ageRestriction, boolean openEvent) {
         this.owner = owner;
         this.title = title;
         this.city = city;
         this.postNumber = postNumber;
         this.street = street;
-        this.houseNumber = houseNumber;
         this.apartmentNumber = apartmentNumber;
         this.eventDate = eventDate;
         this.activity = activity;
@@ -80,11 +77,11 @@ public class Event {
     private List<Review> reviews;
 
     public EventItemJSON getEvenItemJSON() {
-        return new EventItemJSON(eventID, title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, description, images);
+        return new EventItemJSON(eventID, title, eventDate, city, postNumber, street, apartmentNumber, ageRestriction, maxGuests, tags, description, images);
     }
 
     public EventDetailsJSON getEvenDetailsJSON() {
-        return new EventDetailsJSON(eventID, title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, description, images, activity, visibility, openEvent);
+        return new EventDetailsJSON(eventID, title, eventDate, city, postNumber, street, apartmentNumber, ageRestriction, maxGuests, tags, description, images, activity, visibility, openEvent);
     }
 
     @Getter
@@ -97,7 +94,6 @@ public class Event {
         private String city;
         private String postNumber;
         private String street;
-        private String houseNumber;
         private String apartmentNumber;
 
         private boolean ageRestriction;
@@ -107,14 +103,13 @@ public class Event {
 
         private String images;
 
-        public EventItemJSON(long eventID, String title, LocalDateTime eventDate, String city, String postNumber, String street, String houseNumber, String apartmentNumber, boolean ageRestriction, int maxGuests, String tags, String description, String images) {
+        public EventItemJSON(long eventID, String title, LocalDateTime eventDate, String city, String postNumber, String street, String apartmentNumber, boolean ageRestriction, int maxGuests, String tags, String description, String images) {
             this.eventID = eventID;
             this.title = title;
             this.eventDate = eventDate;
             this.city = city;
             this.postNumber = postNumber;
             this.street = street;
-            this.houseNumber = houseNumber;
             this.apartmentNumber = apartmentNumber;
             this.ageRestriction = ageRestriction;
             this.maxGuests = maxGuests;
@@ -129,7 +124,6 @@ public class Event {
             this.city = null;
             this.postNumber = null;
             this.street = null;
-            this.houseNumber = null;
             this.apartmentNumber = null;
             this.ageRestriction = false;
             this.maxGuests = -1;
@@ -145,8 +139,8 @@ public class Event {
         private Visibility visibility;
         private boolean openEvent;
 
-        public EventDetailsJSON(long eventID, String title, LocalDateTime eventDate, String city, String postNumber, String street, String houseNumber, String apartmentNumber, boolean ageRestriction, int maxGuests, String tags, String description, String images, Activity activity, Visibility visibility, boolean openEvent) {
-            super(eventID, title, eventDate, city, postNumber, street, houseNumber, apartmentNumber, ageRestriction, maxGuests, tags, description, images);
+        public EventDetailsJSON(long eventID, String title, LocalDateTime eventDate, String city, String postNumber, String street, String apartmentNumber, boolean ageRestriction, int maxGuests, String tags, String description, String images, Activity activity, Visibility visibility, boolean openEvent) {
+            super(eventID, title, eventDate, city, postNumber, street, apartmentNumber, ageRestriction, maxGuests, tags, description, images);
             this.activity = activity;
             this.visibility = visibility;
             this.openEvent = openEvent;
