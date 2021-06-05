@@ -31,14 +31,13 @@ public class UserService {
     }
 
     public Optional<User> getUserByEmail(String email) {
-        User user = userRepository.findUserByEmail(email).get();
-        return Optional.of(user);
+        return userRepository.findUserByEmail(email);
     }
 
     //UPDATE
     public Optional<User> updateUser(User user) {
-        User u = userRepository.findUserByEmail(user.getEmail()).get();
-        if (u != null) {
+        Optional<User> u = userRepository.findUserByEmail(user.getEmail());
+        if (u.isPresent()) {
             userRepository.save(user);
             return Optional.of(user);
         }
@@ -47,10 +46,10 @@ public class UserService {
 
     //DELETE
     public Optional<User> deleteUser(long userID) {
-        User u = userRepository.findUserByUserID(userID).get();
-        if (u != null) {
-            userRepository.delete(u);
-            return Optional.of(u);
+        Optional<User> u = userRepository.findUserByUserID(userID);
+        if (u.isPresent()) {
+            userRepository.delete(u.get());
+            return u;
         }
         return Optional.empty();
     }

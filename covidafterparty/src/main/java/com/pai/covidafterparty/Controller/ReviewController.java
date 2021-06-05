@@ -7,6 +7,7 @@ import com.pai.covidafterparty.Service.EventService;
 import com.pai.covidafterparty.Service.ReviewService;
 import com.pai.covidafterparty.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jackson.JsonObjectSerializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -101,6 +102,27 @@ public class ReviewController {
             return new ResponseEntity<>("Review deleted", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Review not deleted", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/reviewForEvent")
+    ResponseEntity<List<Review.ReviewJSON>> getReviewForEvent(@RequestParam long eventID){
+        try {
+            List<Review.ReviewJSON> result = reviewService.getReviewForEvent(eventID);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/reviewOpenForUserCheck")
+    ResponseEntity<Boolean> isReviewOpenForUser(Principal principal, @RequestParam long eventID){
+        Optional<User> optUser = userService.getUserByEmail(principal.getName());
+        if(optUser.isPresent()) {
+            boolean result = reviewService.isReviewOpenForUser(optUser.get().getUserID(), eventID);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
     }
 

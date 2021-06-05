@@ -1,6 +1,8 @@
 package com.pai.covidafterparty.Controller;
 
+import com.pai.covidafterparty.Model.Event;
 import com.pai.covidafterparty.Model.Invitation;
+import com.pai.covidafterparty.Model.Review;
 import com.pai.covidafterparty.Service.EventService;
 import com.pai.covidafterparty.Service.InvitationService;
 import com.pai.covidafterparty.Service.UserService;
@@ -9,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +31,6 @@ public class InvitationController {
     @GetMapping("/invitations")
     ResponseEntity<List<Invitation>> getInvitations(){
         return new ResponseEntity<>(invitationService.getInvitations(), HttpStatus.OK);
-    }
-
-    @GetMapping("/invitationsByEvent")
-    ResponseEntity<List<Invitation>> getInvitationForEvent(@RequestParam long eventID){
-        return new ResponseEntity<>(invitationService.getInvitationsForEvent(eventID), HttpStatus.OK);
     }
 
     @PostMapping("/add")
@@ -74,6 +73,65 @@ public class InvitationController {
         } else {
             return new ResponseEntity<>("Invitation not found", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/invForEvent")
+    ResponseEntity<List<Invitation.InvitationJSON>> getInvitationsForEvent(@RequestParam long eventID){
+        try {
+            List<Invitation.InvitationJSON> result = invitationService.getInvitationsForEvent(eventID);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/join")
+    ResponseEntity<String> join(Principal principal, @RequestParam long eventID){
+        String respond = invitationService.joinToEvent(principal.getName(), eventID);
+        HttpStatus status;
+        if(respond.equals("Joined to event successfully")){
+            status = HttpStatus.OK;
+        } else if(respond.equals("Event closed or inactive")){
+            status = HttpStatus.BAD_REQUEST;
+        }else {
+            status = HttpStatus.NOT_FOUND;
+        }
+
+        return new ResponseEntity<>(respond, status);
+    }
+
+    @PostMapping("/inviteToEvent")
+    ResponseEntity<String> inviteToEvent(Principal principal, @RequestParam long eventID, @RequestParam long invitedID){
+        String respond = invitationService.joinRequest(principal.getName(), eventID, invitedID);
+        HttpStatus status;
+        if(respond.equals("Invitation sent to user")){
+            status = HttpStatus.OK;
+        } else if(respond.equals("You do not have permission for this action")){
+            status = HttpStatus.UNAUTHORIZED;
+        } else if(respond.equals("You do not have permission for this action")){
+            status = HttpStatus.NOT_FOUND;
+        } else if(respond.equals("Event closed or inactive")) {
+            status = HttpStatus.NOT_FOUND;
+        } else {
+            status = HttpStatus.NOT_FOUND;
+        }
+
+        return new ResponseEntity<>(respond, status);
+    }
+
+    @GetMapping("/invPerEvent")
+    ResponseEntity<List<Invitation.InvitationJSON>> invPerEvent(Principal principal, @RequestParam long eventID){
+        return new ResponseEntity<>(invitationService.invPerEvent(eventID), HttpStatus.OK);
+    }
+
+    @GetMapping("/invPerInvited")
+    ResponseEntity<List<Invitation.InvitationJSON>> invPerInvited(Principal principal){
+        return new ResponseEntity<>(invitationService.invPerInvited(principal.getName()), HttpStatus.OK);
+    }
+
+    @GetMapping("/invPerInviter")
+    ResponseEntity<List<Invitation.InvitationJSON>> invPerInviter(Principal principal){
+        return new ResponseEntity<>(invitationService.invPerInviter(principal.getName()), HttpStatus.OK);
     }
 
 

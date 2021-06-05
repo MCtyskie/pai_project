@@ -8,6 +8,7 @@ import com.pai.covidafterparty.Service.EventService;
 import com.pai.covidafterparty.Service.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -126,6 +128,8 @@ public class EventController {
 
     @GetMapping("/manageEvents")
     ResponseEntity<List<Event.EventItemJSON>> getUserEvents(Principal principal) {
+        Pair<List<String>, List<String>> pair = Pair.of(new ArrayList<>(), new ArrayList<>());
+        new ResponseEntity<>(pair, HttpStatus.OK);
         Optional<User> owner = userService.getUserByEmail(principal.getName());
         return owner.map(user -> new ResponseEntity<>(eventService.getEventsOrganisedByUser(user), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST));

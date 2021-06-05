@@ -3,5 +3,6 @@ package com.pai.covidafterparty.Enums;
 public enum Status {
     ACCEPTED,
     DENIED,
-    PENDING
+    PENDING_USER,
+    PENDING_OWNER
 }
