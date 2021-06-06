@@ -30,13 +30,11 @@ class EventView extends React.Component {
 		this.fetchAllCities = this.fetchAllCities.bind(this);
 		this.fetchAllEvents = this.fetchAllEvents.bind(this);
 		this.handleReset = this.handleReset.bind(this);
-		// this.dummyEvents = this.dummyEvents.bind(this);
 	}
 
 	componentDidMount() {
 		if (this.context.getToken() !== undefined && this.context.getToken() !== null) {
 			this.fetchAllEvents();
-			// Endpoint for fetching all cities?
 			this.fetchAllCities();
 		}
 	}
@@ -57,7 +55,6 @@ class EventView extends React.Component {
 			}
 		})
 			.then(response => {
-				console.log(response.data);
 				this.setState({ eventList: response.data, isFetchingData: false });
 			})
 			.catch(err => {

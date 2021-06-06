@@ -18,7 +18,7 @@ class ReviewView extends React.Component {
     }
 
     fetchReviews() {
-        const backend_url = "http://localhost:8081/review/getReviews";
+        const backend_url = "http://localhost:8081/api/review/getReviews";
         axios.get(backend_url, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,

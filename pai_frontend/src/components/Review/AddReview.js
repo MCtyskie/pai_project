@@ -16,17 +16,46 @@ class AddReview extends React.Component {
             isOpen: false,
             rating: 0,
             comment: "",
-            isResponseSent: false,
             isResponseError: false,
+            isFetchingData: true,
+            isFetchingError: false,
+            canAddReview: false,
+            reviewSent: false,
         }
         this.handleDialogOpen = this.handleDialogOpen.bind(this);
         this.handleDialogClose = this.handleDialogClose.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleDialogAdd = this.handleDialogAdd.bind(this);
+        this.fetchIfUserCanAddReview = this.fetchIfUserCanAddReview.bind(this);
+        this.prepareReviewDialog = this.prepareReviewDialog.bind(this);
     }
 
     componentDidMount() {
-        console.log("redirect to event details view on selection for adding review");
+        this.fetchIfUserCanAddReview();
+    }
+
+    fetchIfUserCanAddReview() {
+        const backend_url = "http://localhost:8081/api/review/reviewOpenForUserCheck";
+        axios.get(backend_url, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
+            },
+            params: {
+                eventID: this.props.eventID,
+            }
+        })
+            .then(response => {
+                console.log(response.data);
+                this.setState({
+                    canAddReview: response.data,
+                    isFetchingData: false,
+                    isFetchingError: false
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                this.setState({ isFetchingData: false, isFetchingError: true });
+            })
     }
 
     handleDialogOpen() {
@@ -44,7 +73,7 @@ class AddReview extends React.Component {
                 rate: this.state.rating,
                 description: this.state.comment,
             }
-            const backend_url = "http://localhost:8081/review/addReview";
+            const backend_url = "http://localhost:8081/api/review/addReview";
             axios.post(backend_url, data, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
@@ -52,12 +81,12 @@ class AddReview extends React.Component {
             })
                 .then(response => {
                     console.log(response.status);
-                    response.status === 201 ? this.setState({isResponseSent: true, isResponseError: false}) : 
-                    this.setState({isResponseError: true});
+                    response.status === 201 ? this.setState({ canAddReview: false, reviewSent: true, isResponseError: false }) :
+                        this.setState({ isResponseError: true });
                 })
                 .catch(err => {
                     console.log(err);
-                    this.setState({isResponseError: true});
+                    this.setState({ isResponseError: true });
                 })
         });
     }
@@ -76,21 +105,11 @@ class AddReview extends React.Component {
         }
     }
 
-
-    render() {
-        if (this.state.isResponseError) {
-			return <Alert variant="warning">
-				<Alert.Heading>
-					Couldn't load data
-				</Alert.Heading>
-				Something happend during data transfer...<br/>
-				<Alert.Link href="/#">Go back to menu</Alert.Link>
-				</Alert>
-		}
+    prepareReviewDialog() {
         return (
             <>
-                <Button variant="primary" onClick={this.handleDialogOpen}>Add Review</Button>
-                {this.state.isResponseSent ? <Alert variant="success">Added comment, Thank you!</Alert>: <div></div>}
+                <Button variant="primary" onClick={this.handleDialogOpen} disabled={!this.state.canAddReview}>Add Review</Button>
+                {this.state.reviewSent ? <Alert variant="success">Added comment, Thank you!</Alert> : <div></div>}
                 <Dialog open={this.state.isOpen} onClose={this.handleDialogClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Review</DialogTitle>
                     <DialogContent>
@@ -127,6 +146,23 @@ class AddReview extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
+            </>
+        );
+    }
+
+    render() {
+        if (this.state.isResponseError) {
+            return <Alert variant="warning">
+                <Alert.Heading>
+                    Couldn't load data
+				</Alert.Heading>
+				Something happend during data transfer...<br />
+                <Alert.Link href="/#">Go back to menu</Alert.Link>
+            </Alert>
+        }
+        return (
+            <>
+                {this.state.isFetchingData ? <></> : this.prepareReviewDialog()}
             </>
         );
     }

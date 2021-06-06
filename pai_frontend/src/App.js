@@ -14,6 +14,7 @@ import AuthContext from './components/AuthContext';
 import { UsersView } from './components/AdminPanel/UsersView';
 import { InvitationView } from './components/Invitation/InvitationView';
 import { ReviewView } from './components/Review/ReviewView';
+import { EventsToReview } from './components/Review/EventsToReview';
 import { EventInvitations } from './components/Invitation/EventInvitations';
 import { ProfileEvents } from './components/Profile/ProfileEvents';
 import { ManageEvents } from './components/Event/ManageEvents';
@@ -68,6 +69,7 @@ class App extends Component {
 						<Route path="/my_reviews" component={ReviewView} />
 						<Route path="/my_events" component={ProfileEvents} />
 						<Route path="/manage_events" component={ManageEvents} />
+						<Route path="/issue_review" component={EventsToReview} />
 					</AuthContext.Provider>
 				</BrowserRouter>
 			</div>

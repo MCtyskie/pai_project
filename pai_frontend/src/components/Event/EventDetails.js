@@ -18,6 +18,7 @@ class EventDetails extends React.Component {
 			eventItem: null,
 			eventInvitations: [],
 			eventReviews: [],
+			sentJoin: false,
 		}
 		this.prepareEventDetailsView = this.prepareEventDetailsView.bind(this);
 		this.fetchEventAllData = this.fetchEventAllData.bind(this);
@@ -30,7 +31,8 @@ class EventDetails extends React.Component {
 	}
 
 	fetchEventAllData() {
-		const backend_url = "http://localhost:8081/api/event/details";
+		// TODO reformat this bcs of many shots - different functions
+		let backend_url = "http://localhost:8081/api/event/details";
 		axios.get(backend_url, {
 			headers: {
 				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
@@ -41,37 +43,67 @@ class EventDetails extends React.Component {
 		})
 			.then(response => {
 				console.log(response.data);
-				this.setState({
-					eventInvitations: response.data.invitations,
-					eventReviews: response.data.reviews,
-					isFetchingData: false,
-					isFetchingError: false,
-				});
 			})
 			.catch(err => {
 				console.log(err);
 				this.setState({ isFetchingData: false, isFetchingError: true });
-			})
-	}
-
-	handleJoin() {
-		// TODO check name implemented in backend
-		const backend_url = "http://localhost:8081/api/event/join";
+			});
+		backend_url = "http://localhost:8081/api/invitation/invPerEvent";
 		axios.get(backend_url, {
 			headers: {
 				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
 			},
 			params: {
-				eventID: this.state.eventItem.eventId,
+				eventID: this.state.eventItem.eventID,
+			}
+		})
+			.then(response => {
+				this.setState({
+					eventInvitations: response.data,
+				});
+			})
+			.catch(err => {
+				console.log(err);
+				this.setState({ isFetchingData: false, isFetchingError: true });
+			});
+		backend_url = "http://localhost:8081/api/review/reviewForEvent";
+		axios.get(backend_url, {
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
+			},
+			params: {
+				eventID: this.state.eventItem.eventID,
+			}
+		})
+			.then(response => {
+				this.setState({
+					eventReviews: response.data,
+					isFetchingData: false,
+					isFetchingError: false
+				});
+			})
+			.catch(err => {
+				console.log(err);
+				this.setState({ isFetchingData: false, isFetchingError: true });
+			});
+	}
+
+	handleJoin() {
+		const backend_url = "http://localhost:8081/api/invitation/join";
+		axios.post(backend_url, {}, {
+			params: {
+				eventID: this.state.eventItem.eventID,
+			},
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
 			}
 		})
 			.then(response => {
 				console.log(response.data);
-				this.setState({ isFetchingError: false });
+				this.setState({ sentJoin: true });
 			})
 			.catch(err => {
 				console.log(err);
-				this.setState({ isFetchingError: true });
 			})
 	}
 
@@ -80,11 +112,17 @@ class EventDetails extends React.Component {
 		let eventTags = this.state.eventItem.tags.split(",");
 		let eventChips = [];
 		eventTags.forEach(tag => {
-			eventChips.push(<Chip color="primary" label={tag} />)
+			eventChips.push(<Chip color="primary" key={tag} label={tag} />)
 		});
-		let eventAddress = this.state.eventItem.city + ", " + this.state.eventItem.street + " ";
-		this.state.eventItem.houseNumber != 0 ? eventAddress.concat(this.state.eventItem.houseNumber) : eventAddress.concat(this.state.eventItem.apartmentNumber);
-		console.log(eventAddress);
+		let invitations = [];
+		this.state.eventInvitations.forEach(invite =>{
+			invitations.push(<div>Status of invitation: {invite.status} | invited user: {invite.invitedID}</div>)
+		});
+		let reviews = [];
+		this.state.eventReviews.forEach(review =>{
+			reviews.push(<div>Rate: {review.rate} | reviewer user: {review.reviewerID} | description : {review.description}</div>)
+		});
+		let eventAddress = this.state.eventItem.city + ", " + this.state.eventItem.street + " " + this.state.eventItem.apartmentNumber;
 		return (
 			<div className="event-details-container">
 				<div className="event-title">
@@ -96,11 +134,11 @@ class EventDetails extends React.Component {
 					<div className="event-main-info">{eventAddress}</div>
 				</div>
 				<div className="row-container">
-					<div className="event-lower-info">Over 18?<Checkbox checked={this.state.eventItem.ageRestriction} disabed className="checkbox"></Checkbox></div>
+					<div className="event-lower-info">Over 18?<Checkbox checked={this.state.eventItem.ageRestriction} disabled className="checkbox"></Checkbox></div>
 					<div className="event-lower-info">Invitations: {this.state.eventItem.invitationsAccepted}/{this.state.eventItem.maxGuests}</div>
 					<div className="event-lower-info">{eventChips}</div>
 				</div>
-				<Button variant="primary" onClick={this.handleJoin}>Join Event</Button>
+				<Button variant="primary" onClick={this.handleJoin} disabled={this.state.sentJoin}>Join Event</Button>
 				<div className="event-nav-details">
 					<Link
 						to="description"
@@ -126,10 +164,10 @@ class EventDetails extends React.Component {
 					{this.state.eventItem.description}
 				</div>
 				<div id="event-invitations">
-					{this.state.eventInvitations}
+					{invitations}
 				</div>
 				<div id="event-reviews">
-					{this.state.eventReviews}
+					{reviews}
 				</div>
 				<AddReview eventID={this.props.location.query.eventItem.eventID}></AddReview>
 			</div>
@@ -142,9 +180,9 @@ class EventDetails extends React.Component {
 				<Alert.Heading>
 					Failed to get/send data
 				</Alert.Heading>
-				Something happend during data transfer...<br/>
+				Something happend during data transfer...<br />
 				<Alert.Link href="/events">Go back to previous page</Alert.Link>
-				</Alert>
+			</Alert>
 		}
 		return (
 			<>

@@ -45,6 +45,7 @@ public class Event {
     private Visibility visibility;
     private String tags;
     private int maxGuests;
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
     private String images;
     private boolean ageRestriction;

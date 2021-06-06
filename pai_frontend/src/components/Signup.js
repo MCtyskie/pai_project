@@ -2,7 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
-import "./login.css"
+import "./login.css";
 
 
 class Signup extends React.Component {
@@ -23,7 +23,7 @@ class Signup extends React.Component {
     }
 
     componentDidMount() {
-        console.log("Loaded Signup Page");
+
     }
 
     handleChange(event) {
@@ -56,7 +56,7 @@ class Signup extends React.Component {
                 phone: this.state.phone,
             }).then(response => {
                 console.log(response.data);
-                (response.status == 200) ? this.setState({ isLogged: true }) : this.setState({ isLogged: false })
+                (response.status == 200) ? this.props.history.push("/login") : this.setState({ isLogged: false })
             }).catch(err => {
                 console.log("something wrong happend");
                 console.log(err);
@@ -133,7 +133,7 @@ class Signup extends React.Component {
 
                 <Button variant="primary" className="submit-btn" type="submit">
                     Signup!
-                    </Button>
+                </Button>
             </Form>);
         return (
             <div className="login-container">

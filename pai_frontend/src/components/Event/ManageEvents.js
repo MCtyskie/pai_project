@@ -8,7 +8,7 @@ class ManageEvents extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isFetchingData: false,
+            isFetchingData: true,
             eventList: [],
         }
         this.fetchOrganisedEvents = this.fetchOrganisedEvents.bind(this);
@@ -16,7 +16,7 @@ class ManageEvents extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ isFetchingData: true }, () => this.fetchOrganisedEvents());
+        this.fetchOrganisedEvents();
     }
 
     fetchOrganisedEvents() {
