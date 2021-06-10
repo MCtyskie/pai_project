@@ -1,10 +1,12 @@
 package com.pai.covidafterparty.Controller;
 
 import com.pai.covidafterparty.Model.Event;
+import com.pai.covidafterparty.Model.Invitation;
 import com.pai.covidafterparty.Model.User;
 import com.pai.covidafterparty.Repository.EventRepositoryCustom;
 import com.pai.covidafterparty.Repository.EventRepositoryCustomImpl;
 import com.pai.covidafterparty.Service.EventService;
+import com.pai.covidafterparty.Service.InvitationService;
 import com.pai.covidafterparty.Service.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -25,6 +24,8 @@ import java.util.Optional;
 public class EventController {
     @Autowired
     EventService eventService;
+    @Autowired
+    InvitationService invitationService;
     @Autowired
     UserService userService;
 
@@ -126,13 +127,22 @@ public class EventController {
 
     }
 
-    @GetMapping("/manageEvents")
-    ResponseEntity<List<Event.EventItemJSON>> getUserEvents(Principal principal) {
-        Pair<List<String>, List<String>> pair = Pair.of(new ArrayList<>(), new ArrayList<>());
-        new ResponseEntity<>(pair, HttpStatus.OK);
+    @GetMapping("manageEvents")
+    ResponseEntity<List<Pair<Event.EventItemJSON, List<Invitation.InvitationJSON>>>> getUserEventsWithInvitations(Principal principal) {
         Optional<User> owner = userService.getUserByEmail(principal.getName());
-        return owner.map(user -> new ResponseEntity<>(eventService.getEventsOrganisedByUser(user), HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST));
+        List<Pair<Event.EventItemJSON, List<Invitation.InvitationJSON>>> eventsWithInvitations = new ArrayList<>();
+        if (owner.isPresent()) {
+            List<Event.EventItemJSON> events = eventService.getEventsOrganisedByUser(owner.get());
+            events.forEach((event) -> {
+                List<Invitation.InvitationJSON> invitations = invitationService.invPerEvent(event.getEventID());
+                Pair<Event.EventItemJSON, List<Invitation.InvitationJSON>> eventWithInvitations = Pair.of(event, invitations);
+                eventsWithInvitations.add(eventWithInvitations);
+            });
+        }
+        else{
+            return new ResponseEntity<>(eventsWithInvitations, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(eventsWithInvitations, HttpStatus.OK);
     }
 
     @GetMapping("/cities")

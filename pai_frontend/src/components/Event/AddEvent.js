@@ -67,18 +67,15 @@ class AddEvent extends React.Component {
         event.preventDefault();
         const form = event.currentTarget;
         console.log(form);
-        console.log(form.checkValidity());
         if (form.checkValidity() === false) {
             event.stopPropagation();
         }
         else {
             this.setState({ validated: true });
             const backend_url = "http://localhost:8081/api/event/createEvent";
-            let eventDateTime = this.state.date+"T"+this.state.time;
+            let eventDateTime = this.state.date + "T" + this.state.time;
             let tagsString = this.state.tags.join(",");
-            console.log(tagsString);
-            console.log(eventDateTime);
-            axios.post(backend_url, {
+            let formData = {
                 title: this.state.title,
                 city: this.state.city,
                 postNumber: this.state.postNumber,
@@ -87,21 +84,25 @@ class AddEvent extends React.Component {
                 date: this.state.date,
                 time: this.state.time,
                 eventDate: eventDateTime,
-                // activity: this.state.activity,
                 activity: "ACTIVE",
                 visibility: this.state.visibility,
                 // tags: this.state.tags, THIS will be the final version, but for now i will parse them to string bcs backend is not ready
                 tags: tagsString,
-                maxGuests: this.state.maxGuests,
                 description: this.state.description,
                 ageRestriction: this.state.ageRestriction,
-                openEvent: this.state.open,
+                openEvent: this.state.openEvent,
                 images: "",
-            }, {
+            };
+            if (this.state.openEvent === false) {
+                formData["maxGuests"] = this.state.maxGuests;
+            };
+            console.log(formData);
+            axios.post(backend_url, formData, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
                 }
             }).then(response => {
+                // TODO maybe some info event added -> go backto events menu
                 console.log(response.data);
             }).catch(err => {
                 console.log("something wrong happend");
@@ -174,17 +175,10 @@ class AddEvent extends React.Component {
                         </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group controlId="formBasicMaxGuests">
-                    <Form.Label>Maximal number of guests</Form.Label>
-                    <Form.Control required type="number" name="maxGuests" onChange={this.handleChange} />
-                    <Form.Control.Feedback type="invalid">
-                        Please input a valid number.
-                        </Form.Control.Feedback>
-                </Form.Group>
 
                 <Form.Group>
                     <Form.Label>Visibility of Event</Form.Label>
-                    <Form.Control as="select" custom name="visibility" onChange={this.handleChange}> 
+                    <Form.Control as="select" custom name="visibility" onChange={this.handleChange}>
                         <option>PUBLIC</option>
                         <option>PRIVATE</option>
                     </Form.Control>
@@ -193,11 +187,19 @@ class AddEvent extends React.Component {
                 <Form.Group>
                     <Form.Check
                         type="checkbox"
-                        name="open"
+                        name="openEvent"
                         onClick={this.handleChange}
                         label="Open party?"
                     />
                 </Form.Group>
+
+                {this.state.openEvent ? <> </> : <Form.Group controlId="formBasicMaxGuests">
+                    <Form.Label>Maximal number of guests</Form.Label>
+                    <Form.Control required type="number" name="maxGuests" onChange={this.handleChange} />
+                    <Form.Control.Feedback type="invalid">
+                        Please input a valid number.
+                        </Form.Control.Feedback>
+                </Form.Group>}
 
                 <Form.Group>
                     <Form.Check

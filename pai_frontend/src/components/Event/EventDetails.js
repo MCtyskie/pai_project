@@ -120,7 +120,7 @@ class EventDetails extends React.Component {
 		});
 		let reviews = [];
 		this.state.eventReviews.forEach(review =>{
-			reviews.push(<div>Rate: {review.rate} | reviewer user: {review.reviewerID} | description : {review.description}</div>)
+			reviews.push(<div>Rate: {review.rate} | reviewer user: {review.userID} | description : {review.description}</div>)
 		});
 		let eventAddress = this.state.eventItem.city + ", " + this.state.eventItem.street + " " + this.state.eventItem.apartmentNumber;
 		return (
@@ -130,7 +130,8 @@ class EventDetails extends React.Component {
 				</div>
 				<div className="row-container">
 					<div className="event-photo">{this.state.eventItem.picture}</div>
-					<div className="event-main-info">{this.state.eventItem.date}</div>
+					{/* <div className="event-photo">{this.state.eventItem.activity}</div> */}
+					<div className="event-main-info">{this.state.eventItem.eventDate}</div>
 					<div className="event-main-info">{eventAddress}</div>
 				</div>
 				<div className="row-container">

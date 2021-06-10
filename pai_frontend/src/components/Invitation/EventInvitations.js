@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import EventRow from '../Event/EventRow';
+import Button from 'react-bootstrap/Button';
 
 
 
@@ -12,31 +14,10 @@ class EventInvitations extends React.Component {
         }
         this.fetchOrganisedEvents = this.fetchOrganisedEvents.bind(this);
         this.prepareEventInvitations = this.prepareEventInvitations.bind(this);
-        this.fetchInvitationsPerEvent = this.fetchInvitationsPerEvent.bind(this);
     }
 
     componentDidMount() {
         this.fetchOrganisedEvents();
-    }
-
-    fetchInvitationsPerEvent(eventID){
-        const backend_url = "http://localhost:8081/api/invitation/invPerEvent";
-        axios.get(backend_url, {
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
-            },
-			params: {
-				eventID: eventID,
-			}
-        })
-            .then(response => {
-                let invitations = response.data[0];
-                return invitations;
-            })
-            .catch(err => {
-                console.log(err);
-                return [];
-            })
     }
 
     fetchOrganisedEvents() {
@@ -47,7 +28,8 @@ class EventInvitations extends React.Component {
             }
         })
             .then(response => {
-                this.setState({ eventList: response.data, isFetchingData: false });
+                // We get list of pairs so first is always an event and second is list of invitations for this events
+                this.setState({ eventList: response.data, isFetchingData: false  });
             })
             .catch(err => {
                 console.log(err);
@@ -57,11 +39,18 @@ class EventInvitations extends React.Component {
 
     prepareEventInvitations() {
         let eventInvitations = [];
-        let invitationsPerEvent = {};
-        this.state.eventList.forEach(eventItem =>{
-            invitationsPerEvent[eventItem.eventID] = this.fetchInvitationsPerEvent(eventItem.eventID);
-        });
-        console.log(invitationsPerEvent);
+        this.state.eventList.forEach(pair =>{
+            console.log(pair["first"]);
+            console.log(pair["second"]);
+            eventInvitations.push(
+                <div>
+                    <EventRow item={pair["first"]}/>
+                    <div>{pair["second"]["status"]} | {pair["second"]["invitedName"]}</div>
+                    <Button variant="primary">Accept</Button>
+                    <Button variant="secondary">Discard</Button>
+                </div>
+            )
+        })
         return eventInvitations;
     }
 
