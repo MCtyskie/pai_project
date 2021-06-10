@@ -36,7 +36,7 @@ public class Invitation {
     }
 
     public InvitationJSON getInvitationJSON(){
-        return new InvitationJSON(invitationID, inviter.getUserID(), invited.getUserID(), event.getEventID(), status);
+        return new InvitationJSON(invitationID, inviter, invited, event.getEventID(), status);
     }
 
     @Getter
@@ -45,14 +45,18 @@ public class Invitation {
     public class InvitationJSON{
         private long invitationID;
         private long inviterID;
+        private String inviterName;
         private long invitedID;
+        private String invitedName;
         private long eventID;
         private Status status;
 
-        public InvitationJSON(long invitationID, long inviterID, long invitedID, long eventID, Status status) {
+        public InvitationJSON(long invitationID, User inviter, User invited, long eventID, Status status) {
             this.invitationID = invitationID;
-            this.inviterID = inviterID;
-            this.invitedID = invitedID;
+            this.inviterID = inviter.getUserID();
+            this.invitedID = invited.getUserID();
+            this.invitedName = invited.getName() + " " + invited.getLastName();
+            this.inviterName = inviter.getName() + " " + inviter.getLastName();
             this.eventID = eventID;
             this.status = status;
         }
