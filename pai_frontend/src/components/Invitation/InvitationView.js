@@ -1,5 +1,6 @@
 import React from "react";
 import axios from 'axios';
+import { InvitationRow } from "./InvitationRow";
 
 class InvitationView extends React.Component {
     constructor(props) {
@@ -35,7 +36,7 @@ class InvitationView extends React.Component {
     prepareInvitations() {
         let invitations = [];
         this.state.invitationsList.forEach(invite => {
-            invitations.push(<div>{invite.status} for event: {invite.eventID}</div>)
+            invitations.push(<InvitationRow invitation={invite}/>)
         });
         return invitations;
     }

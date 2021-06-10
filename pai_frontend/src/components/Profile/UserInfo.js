@@ -9,7 +9,7 @@ class UserInfo extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isFetchingData: false,
+            isFetchingData: true,
             userData: {},
         }
         this.fetchUserDetails = this.fetchUserDetails.bind(this);
@@ -17,25 +17,25 @@ class UserInfo extends React.Component {
     }
 
     componentDidMount() {
-        console.log("Loaded My Profile");
         this.fetchUserDetails();
     }
 
     fetchUserDetails() {
-        // this.setState({ isFetchingData: true });
-        // const backend_url = "http://localhost:8081/user/profile";
-        // axios.get(backend_url, {
-        // 	headers: {
-        // 		"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
-        // 	}
-        // })
-        // 	.then(response => {
-        // 		this.setState({ userData: response.data, isFetchingData: false });
-        // 	})
-        // 	.catch(err => {
-        // 		console.log(err);
-        // 		this.setState({ isFetchingData: false });
-        // 	})
+        this.setState({ isFetchingData: true });
+        const backend_url = "http://localhost:8081/api/user/profile";
+        axios.get(backend_url, {
+        	headers: {
+        		"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
+        	}
+        })
+        	.then(response => {
+                console.log(response.data)
+        		this.setState({ userData: response.data, isFetchingData: false });
+        	})
+        	.catch(err => {
+        		console.log(err);
+        		this.setState({ isFetchingData: false });
+        	})
 
     }
 

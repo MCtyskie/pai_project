@@ -37,8 +37,9 @@ class ManageEvents extends React.Component {
 
     prepareUserOwnedEvents() {
         let eventView = [];
-        if (this.state.eventList.length > 0) {
-            for (const eventItem of this.state.eventList) {
+        if (this.state.eventList.length !== 0) {
+            for (const eventWithInvitations of this.state.eventList) {
+                let eventItem = eventWithInvitations["first"]
                 eventView.push(
                     <div key={eventItem.eventID}>
                         <EventRow item={eventItem}></EventRow>
@@ -60,7 +61,6 @@ class ManageEvents extends React.Component {
 
 
     render() {
-        // TODO view design? Should be the same as view event or what?
         return (
             <div>
                 {this.state.isFetchingData ? "fetching data..." : this.prepareUserOwnedEvents()}
