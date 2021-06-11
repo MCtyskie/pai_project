@@ -3,6 +3,8 @@ import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import { Link } from "react-router-dom";
 import "./profile.css";
+import { CustomDialog } from '../CustomDialog';
+import TextField from '@material-ui/core/TextField';
 
 
 class UserInfo extends React.Component {
@@ -11,14 +13,26 @@ class UserInfo extends React.Component {
         this.state = {
             isFetchingData: true,
             userData: {},
+            isOpen: false,
+            dialogContentMenuId: 0,
+            dialogContentActionsId: 0,
         }
         this.fetchUserDetails = this.fetchUserDetails.bind(this);
         this.prepareUserPanel = this.prepareUserPanel.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleChangePassword = this.handleChangePassword.bind(this);
+		this.handleDialogClose = this.handleDialogClose.bind(this);
     }
 
     componentDidMount() {
         this.fetchUserDetails();
     }
+
+
+	handleDialogClose() {
+		this.setState({ isOpen: false });
+	}
 
     fetchUserDetails() {
         this.setState({ isFetchingData: true });
@@ -39,30 +53,33 @@ class UserInfo extends React.Component {
 
     }
 
+    handleEdit(){
+        console.log("action");
+        this.setState({ isOpen: true });
+    }
+
+    handleDelete(){
+
+    }
+
+    handleChangePassword(){
+
+    }
+
     prepareUserPanel = () => {
         let userPanel;
-        let dummy_data = {
-            "userID": 1,
-            "name": "Jan",
-            "lastName": "Kowalsky",
-            "email": "jkowal@test.com",
-            "city": "TestCity",
-            "phone": "987987987",
-            "birthdate": "2000-01-01",
-            "photo": "JPG",
-        }
         let userInformations = [];
-        for (const [key, value] of Object.entries(dummy_data)) {
+        for (const [key, value] of Object.entries(this.state.userData)) {
             if (key === "userID" || key === "photo") {
                 continue;
             }
-            userInformations.push(<div className="user-info">{value}</div>)
+            userInformations.push(<div className="user-info">{key}: {value}</div>)
         }
         userPanel = (
             <div className="user-container">
                 <div className="user-column">
                     <div className="user-picture">
-                        {dummy_data.photo}
+                        AVATAR HERE
                     </div>
                     <Button className="">EDIT PICTURE</Button>
                 </div>
@@ -71,9 +88,9 @@ class UserInfo extends React.Component {
                         {userInformations}
                     </div>
                     <div className="user-manage-btns">
-                        <Button className="" variant="primary">EDIT PROFILE</Button>
-                        <Button className="" variant="danger">DELETE PROFILE</Button>
-                        <Button className="" variant="warning">CHANGE PASSWORD</Button>
+                        <Button className="" variant="primary" onClick={this.handleEdit}>EDIT PROFILE</Button>
+                        <Button className="" variant="danger" onClick={this.handleDelete}>DELETE PROFILE</Button>
+                        <Button className="" variant="warning" onClick={this.handleChangePassword}>CHANGE PASSWORD</Button>
                     </div>
                 </div>
             </div>
@@ -82,8 +99,29 @@ class UserInfo extends React.Component {
     }
 
     render() {
+        console.log(this.state.isOpen)
         return (
             <div>
+                <CustomDialog
+                    key={this.state.isOpen}
+					isOpen={this.state.isOpen} 
+					onClose={this.handleDialogClose}
+					dialogTitle="TEST"
+					dialogHeader="Testing header"
+					dialogContent={<TextField
+                        autoFocus
+                        required
+                        name="rating"
+                        margin="dense"
+                        id="rating"
+                        label="Rating from 0 to 5"
+                        type="number"
+                        fullWidth
+                    />}
+					dialogActions={<Button onClick={this.handleDialogClose} color="primary">
+                    Cancel
+                </Button>}
+				/>
                 {this.state.isFetchingData ? "fetching data..." : this.prepareUserPanel()}
             </div>
         );

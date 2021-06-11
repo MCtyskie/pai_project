@@ -43,44 +43,12 @@ class EventDetails extends React.Component {
 		})
 			.then(response => {
 				console.log(response.data);
-			})
-			.catch(err => {
-				console.log(err);
-				this.setState({ isFetchingData: false, isFetchingError: true });
-			});
-		backend_url = "http://localhost:8081/api/invitation/invPerEvent";
-		axios.get(backend_url, {
-			headers: {
-				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
-			},
-			params: {
-				eventID: this.state.eventItem.eventID,
-			}
-		})
-			.then(response => {
 				this.setState({
-					eventInvitations: response.data,
-				});
-			})
-			.catch(err => {
-				console.log(err);
-				this.setState({ isFetchingData: false, isFetchingError: true });
-			});
-		backend_url = "http://localhost:8081/api/review/reviewForEvent";
-		axios.get(backend_url, {
-			headers: {
-				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
-			},
-			params: {
-				eventID: this.state.eventItem.eventID,
-			}
-		})
-			.then(response => {
-				this.setState({
-					eventReviews: response.data,
-					isFetchingData: false,
-					isFetchingError: false
-				});
+					eventItem: response.data.first,
+					eventInvitations: response.data.second.second,
+					eventReviews: response.data.second.first,
+					isFetchingData: false
+				})
 			})
 			.catch(err => {
 				console.log(err);
@@ -115,7 +83,11 @@ class EventDetails extends React.Component {
 			eventChips.push(<Chip color="primary" key={tag} label={tag} />)
 		});
 		let invitations = [];
+		let acceptedInvitationsCounter = 0;
 		this.state.eventInvitations.forEach(invite =>{
+			if(invite.status === "ACCEPTED"){
+				acceptedInvitationsCounter += 1;
+			}
 			invitations.push(<div>Status of invitation: {invite.status} | invited user: {invite.invitedID}</div>)
 		});
 		let reviews = [];
@@ -130,13 +102,13 @@ class EventDetails extends React.Component {
 				</div>
 				<div className="row-container">
 					<div className="event-photo">{this.state.eventItem.picture}</div>
-					{/* <div className="event-photo">{this.state.eventItem.activity}</div> */}
+					<div className="event-photo">Event is {this.state.eventItem.activity}</div>
 					<div className="event-main-info">{this.state.eventItem.eventDate}</div>
 					<div className="event-main-info">{eventAddress}</div>
 				</div>
 				<div className="row-container">
 					<div className="event-lower-info">Over 18?<Checkbox checked={this.state.eventItem.ageRestriction} disabled className="checkbox"></Checkbox></div>
-					<div className="event-lower-info">Invitations: {this.state.eventItem.invitationsAccepted}/{this.state.eventItem.maxGuests}</div>
+					<div className="event-lower-info">Accepted invitations: {acceptedInvitationsCounter}/{this.state.eventItem.maxGuests}</div>
 					<div className="event-lower-info">{eventChips}</div>
 				</div>
 				<Button variant="primary" onClick={this.handleJoin} disabled={this.state.sentJoin}>Join Event</Button>

@@ -90,14 +90,17 @@ public class EventController {
     }
 
     @GetMapping("/incoming_events")
-    ResponseEntity<List<Event.EventItemJSON>> incomingEvents(Principal principal){
-        List<Event.EventItemJSON> resultList = eventService.getIncomingEvents(userService.getUserByEmail(principal.getName()).get());
-        return new ResponseEntity<>(resultList, HttpStatus.OK);
+    ResponseEntity<List<Event.EventItemJSON>> incomingEvents(Principal principal) {
+        if (userService.getUserByEmail(principal.getName()).isPresent()) {
+            List<Event.EventItemJSON> resultList = eventService.getIncomingEvents(userService.getUserByEmail(principal.getName()).get());
+            return new ResponseEntity<>(resultList, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/events_filter")
-    ResponseEntity<List<Event.EventDetailsJSON>> getFilteredEvents(@RequestBody EventRepositoryCustomImpl.EventFilters eventFilters){
-        try{
+    ResponseEntity<List<Event.EventDetailsJSON>> getFilteredEvents(@RequestBody EventRepositoryCustomImpl.EventFilters eventFilters) {
+        try {
             return new ResponseEntity<>(eventService.getFilteredEvents(eventFilters), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
@@ -147,8 +150,7 @@ public class EventController {
                 Pair<Event.EventItemJSON, List<Invitation.InvitationJSON>> eventWithInvitations = Pair.of(event, invitations);
                 eventsWithInvitations.add(eventWithInvitations);
             });
-        }
-        else{
+        } else {
             return new ResponseEntity<>(eventsWithInvitations, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(eventsWithInvitations, HttpStatus.OK);
@@ -160,13 +162,13 @@ public class EventController {
     }
 
     @GetMapping("/events_for_owner")
-    ResponseEntity<List<Event.EventItemJSON>> getEventsForOwner(Principal principal){
+    ResponseEntity<List<Event.EventItemJSON>> getEventsForOwner(Principal principal) {
         List<Event.EventItemJSON> resultList = eventService.getEventsForOwner(userService.getUserByEmail(principal.getName()).get());
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
     @GetMapping("/finished_events")
-    ResponseEntity<List<Event.EventItemJSON>> finishedEvents(Principal principal){
+    ResponseEntity<List<Event.EventItemJSON>> finishedEvents(Principal principal) {
         List<Event.EventItemJSON> resultList = eventService.getFinishedEvents(userService.getUserByEmail(principal.getName()).get());
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }

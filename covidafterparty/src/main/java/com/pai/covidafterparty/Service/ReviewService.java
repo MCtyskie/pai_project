@@ -71,9 +71,9 @@ public class ReviewService {
                 .collect(Collectors.toList());
     }
 
-    public List<Review.ReviewJSON> getReviewForEvent(long eventID){
+    public List<Review.ReviewJSON> getReviewForEvent(long eventID) {
         Optional<Event> event = eventRepository.findEventByEventID(eventID);
-        if(event.isPresent()){
+        if (event.isPresent()) {
             return reviewRepository.findByEvent(event.get())
                     .stream()
                     .map(r -> r.getReviewJSON())
@@ -83,9 +83,9 @@ public class ReviewService {
         }
     }
 
-    public boolean isReviewOpenForUser(long userID, long eventID){
+    public boolean isReviewOpenForUser(long userID, long eventID) {
         Optional<Event> optEvent = eventRepository.findEventByEventID(eventID);
-        if(optEvent.isPresent()){
+        if (optEvent.isPresent()) {
             Event event = optEvent.get();
             boolean isUserInvited = invitationRepository.findByEvent(event).stream()
                     .anyMatch(i -> i.getInvited().getUserID() == userID);

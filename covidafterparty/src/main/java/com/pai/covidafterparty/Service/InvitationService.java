@@ -30,9 +30,9 @@ public class InvitationService {
     private EventService eventService;
 
     //CREATE
-    public Optional<Invitation> addInvitation(Invitation invitation){
-        Invitation i=invitationRepository.findInvitationByInvitationID(invitation.getInvitationID()).get();
-        if(i==null){
+    public Optional<Invitation> addInvitation(Invitation invitation) {
+        Optional<Invitation> i = invitationRepository.findInvitationByInvitationID(invitation.getInvitationID());
+        if (i.isPresent()) {
             invitationRepository.save(invitation);
             return Optional.of(invitation);
         }
@@ -40,15 +40,14 @@ public class InvitationService {
     }
 
     //READ
-    public Optional<Invitation> getInvitationById(long invitationID){
-        Invitation invitation = invitationRepository.findInvitationByInvitationID(invitationID).get();
-        return Optional.of(invitation);
+    public Optional<Invitation> getInvitationById(long invitationID) {
+        return invitationRepository.findInvitationByInvitationID(invitationID);
     }
 
     //UPDATE
-    public Optional<Invitation> updateInvitation(Invitation invitation){
-        Invitation i=invitationRepository.findInvitationByInvitationID(invitation.getInvitationID()).get();
-        if(i!=null){
+    public Optional<Invitation> updateInvitation(Invitation invitation) {
+        Optional<Invitation> i = invitationRepository.findInvitationByInvitationID(invitation.getInvitationID());
+        if (i.isPresent()) {
             invitationRepository.save(invitation);
             return Optional.of(invitation);
         }
@@ -56,26 +55,26 @@ public class InvitationService {
     }
 
     //DELETE
-    public Optional<Invitation> deleteInvitation(long invitationID){
-        Invitation i=invitationRepository.findInvitationByInvitationID(invitationID).get();
-        if(i!=null){
-            invitationRepository.delete(i);
-            return Optional.of(i);
+    public Optional<Invitation> deleteInvitation(long invitationID) {
+        Optional<Invitation> i = invitationRepository.findInvitationByInvitationID(invitationID);
+        if (i.isPresent()) {
+            invitationRepository.delete(i.get());
+            return i;
         }
         return Optional.empty();
     }
 
 
-    public List<Invitation> getInvitations(){
+    public List<Invitation> getInvitations() {
         List<Invitation> returnList = new ArrayList<>();
         invitationRepository.findAll().forEach(i -> returnList.add(i));
         return returnList;
     }
 
-    public List<Invitation.InvitationJSON> getInvitationsForEvent(long eventID){
+    public List<Invitation.InvitationJSON> getInvitationsForEvent(long eventID) {
         Optional<Event> optEvent = eventService.getEventById(eventID);
-        if(optEvent.isPresent()){
-            return invitationRepository.findByEvent(eventService.getEventById(eventID).get())
+        if (optEvent.isPresent()) {
+            return invitationRepository.findByEvent(optEvent.get())
                     .stream()
                     .map(i -> i.getInvitationJSON())
                     .collect(Collectors.toList());
@@ -84,7 +83,7 @@ public class InvitationService {
         }
     }
 
-    public Invitation addInvitationFromJSON(Invitation.InvitationJSON invitationJSON){
+    public Invitation addInvitationFromJSON(Invitation.InvitationJSON invitationJSON) {
         try {
             return invitationRepository.save(new Invitation(
                     invitationJSON.getInvitationID(),
@@ -93,22 +92,22 @@ public class InvitationService {
                     eventService.getEventById(invitationJSON.getEventID()).get(),
                     invitationJSON.getStatus()
             ));
-        } catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
 
-    public String joinToEvent(String email, long eventID){
+    public String joinToEvent(String email, long eventID) {
         Optional<Event> optEvent = eventService.getEventById(eventID);
         Optional<User> optUser = userService.getUserByEmail(email);
-        if(optEvent.isPresent() && optUser.isPresent()){
+        if (optEvent.isPresent() && optUser.isPresent()) {
             User user = optUser.get();
             Event event = optEvent.get();
 
-            if(event.getActivity() == Activity.ACTIVE){
+            if (event.getActivity() == Activity.ACTIVE) {
                 Status status;
                 String returnString = "";
-                if(event.isOpenEvent()){
+                if (event.isOpenEvent()) {
                     status = Status.ACCEPTED;
                     returnString = "Joined successfully";
                 } else {
@@ -126,16 +125,16 @@ public class InvitationService {
         }
     }
 
-    public String joinRequest(String email, long eventID, long invitedID){
+    public String joinRequest(String email, long eventID, long invitedID) {
         Optional<Event> optEvent = eventService.getEventById(eventID);
         Optional<User> optUser = userService.getUserByEmail(email);
         Optional<User> optInvited = userService.getUserById(invitedID);
-        if(optEvent.isPresent() && optUser.isPresent() && optInvited.isPresent()){
+        if (optEvent.isPresent() && optUser.isPresent() && optInvited.isPresent()) {
             User user = optUser.get();
             Event event = optEvent.get();
             User invited = optInvited.get();
-            if(event.getActivity() == Activity.ACTIVE){
-                if(event.getModerators().contains(user) || event.getOwner() == user) {
+            if (event.getActivity() == Activity.ACTIVE) {
+                if (event.getModerators().contains(user) || event.getOwner() == user) {
                     Invitation inv = new Invitation(event.getOwner(), invited, event, Status.PENDING_USER);
                     invitationRepository.save(inv);
                     return "Invitation sent to user";
@@ -152,7 +151,7 @@ public class InvitationService {
 
     public List<Invitation.InvitationJSON> invPerEvent(long eventID) {
         Optional<Event> optEvent = eventService.getEventById(eventID);
-        if(optEvent.isPresent()){
+        if (optEvent.isPresent()) {
             return invitationRepository.findByEvent(optEvent.get())
                     .stream()
                     .map(i -> i.getInvitationJSON())
@@ -164,7 +163,7 @@ public class InvitationService {
 
     public List<Invitation.InvitationJSON> invPerInvited(String email) {
         Optional<User> optInvited = userService.getUserByEmail(email);
-        if(optInvited.isPresent()){
+        if (optInvited.isPresent()) {
             return invitationRepository.findByInvited(optInvited.get())
                     .stream()
                     .map(i -> i.getInvitationJSON())
@@ -176,7 +175,7 @@ public class InvitationService {
 
     public List<Invitation.InvitationJSON> invPerInviter(String email) {
         Optional<User> optInvited = userService.getUserByEmail(email);
-        if(optInvited.isPresent()){
+        if (optInvited.isPresent()) {
             return invitationRepository.findByInviter(optInvited.get())
                     .stream()
                     .map(i -> i.getInvitationJSON())

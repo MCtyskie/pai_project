@@ -52,10 +52,10 @@ public class EventService {
 
     //DELETE
     public Optional<Event> deleteEvent(long eventID){
-        Event e=eventRepository.findEventByEventID(eventID).get();
-        if(e!=null){
-            eventRepository.delete(e);
-            return Optional.of(e);
+        Optional <Event> e=eventRepository.findEventByEventID(eventID);
+        if(e.isPresent()){
+            eventRepository.delete(e.get());
+            return e;
         }
         return Optional.empty();
     }
@@ -69,20 +69,17 @@ public class EventService {
     }
 
     public List<Event.EventItemJSON> getIncomingEvents(User user){
-        List<Event> resultList = new ArrayList<>();
-        eventRepository.findIncomingForUser(user.getUserID()).forEach(resultList::add);
+        List<Event> resultList = new ArrayList<>(eventRepository.findIncomingForUser(user.getUserID()));
         return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
     }
 
     public List<Event.EventItemJSON> getFinishedEvents(User user){
-        List<Event> resultList = new ArrayList<>();
-        eventRepository.findFinishedForUser(user.getUserID()).forEach(resultList::add);
+        List<Event> resultList = new ArrayList<>(eventRepository.findFinishedForUser(user.getUserID()));
         return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
     }
 
     public List<Event.EventItemJSON> getEventsForOwner(User user){
-        List<Event> resultList = new ArrayList<>();
-        eventRepository.findEventByOwner(user).forEach(resultList::add);
+        List<Event> resultList = new ArrayList<>(eventRepository.findEventByOwner(user));
         return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
     }
 

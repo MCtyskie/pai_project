@@ -30,6 +30,7 @@ class EventView extends React.Component {
 		this.fetchAllCities = this.fetchAllCities.bind(this);
 		this.fetchAllEvents = this.fetchAllEvents.bind(this);
 		this.handleReset = this.handleReset.bind(this);
+		this.fetchFilteredEvents = this.fetchFilteredEvents.bind(this);
 	}
 
 	componentDidMount() {
@@ -44,14 +45,31 @@ class EventView extends React.Component {
 		axios.get(backend_url, {
 			headers: {
 				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
+			}
+		})
+			.then(response => {
+				this.setState({ eventList: response.data, isFetchingData: false });
+			})
+			.catch(err => {
+				console.log(err);
+				this.setState({ isFetchingData: false });
+
+			})
+	}
+
+	fetchFilteredEvents() {
+		const backend_url = "http://localhost:8081/api/event/events";
+		axios.get(backend_url, {
+			headers: {
+				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
 			},
 			params: {
 				city: this.state.selected_city,
 				tag: this.state.searchByTag,
 				date_start: this.state.event_start_date,
 				date_end: this.state.event_end_date,
-				time_start: this.state.event_time_start,
-				time_end: this.state.event_time_end,
+				time_start: this.state.event_time_start.toLocaleTimeString(),
+				time_end: this.state.event_time_end.toLocaleTimeString(),
 			}
 		})
 			.then(response => {
@@ -176,13 +194,13 @@ class EventView extends React.Component {
 							<div className="button-container">
 								<Button variant="secondary" className="filter-button" onClick={this.handleReset}>
 									Reset
-						</Button>
-								<Button variant="primary" className="filter-button" onClick={this.fetchAllEvents}>
+								</Button>
+								<Button variant="primary" className="filter-button" onClick={this.fetchFilteredEvents}>
 									Search
-						</Button>
+								</Button>
 							</div>
 						</div>
-						{this.state.isFetchingData ? <LinearProgress style={{width: "100%"}} /> : <EventListing events={this.state.eventList}></EventListing>}
+						{this.state.isFetchingData ? <LinearProgress style={{ width: "100%" }} /> : <EventListing events={this.state.eventList}></EventListing>}
 					</div>) : (
 					<div>
 						{this.props.history.push("/login")}
