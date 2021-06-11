@@ -42,7 +42,7 @@ public class Invitation {
     @Getter
     @Setter
     @NoArgsConstructor
-    public class InvitationJSON{
+    public static class InvitationJSON{
         private long invitationID;
         private long inviterID;
         private String inviterName;
