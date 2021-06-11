@@ -70,7 +70,19 @@ public class EventService {
 
     public List<Event.EventItemJSON> getIncomingEvents(User user){
         List<Event> resultList = new ArrayList<>();
-        eventRepository.findIncomingForUser(user).forEach(resultList::add);
+        eventRepository.findIncomingForUser(user.getUserID()).forEach(resultList::add);
+        return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
+    }
+
+    public List<Event.EventItemJSON> getFinishedEvents(User user){
+        List<Event> resultList = new ArrayList<>();
+        eventRepository.findFinishedForUser(user.getUserID()).forEach(resultList::add);
+        return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
+    }
+
+    public List<Event.EventItemJSON> getEventsForOwner(User user){
+        List<Event> resultList = new ArrayList<>();
+        eventRepository.findEventByOwner(user).forEach(resultList::add);
         return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
     }
 

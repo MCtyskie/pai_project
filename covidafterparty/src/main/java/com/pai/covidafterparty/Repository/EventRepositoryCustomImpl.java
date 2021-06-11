@@ -30,12 +30,15 @@ public class EventRepositoryCustomImpl implements EventRepositoryCustom{
         Path<LocalDateTime> datePath = event.get("eventDate");
         List<Predicate> predicates = new ArrayList<>();
 
-        for (String x : filters.getTags().split(";")) {
-            predicates.add(cb.like(tagsPath, "%"+x+"%"));
+        if(!filters.getTags().isBlank()) {
+            for (String x : filters.getTags().split(";")) {
+                predicates.add(cb.like(tagsPath, "%" + x + "%"));
+            }
         }
-        predicates.add(cb.like(cityPath, filters.getCity()));
-        predicates.add(cb.greaterThanOrEqualTo(datePath, filters.getDate_start().atStartOfDay()));
-        predicates.add(cb.lessThan(datePath, filters.getDate_end().plusDays(1).atStartOfDay()));
+
+        if(!filters.getCity().isBlank())predicates.add(cb.like(cityPath, filters.getCity()));
+        if(filters.getDate_start() != null)predicates.add(cb.greaterThanOrEqualTo(datePath, filters.getDate_start().atStartOfDay()));
+        if(filters.getDate_end() != null)predicates.add(cb.lessThan(datePath, filters.getDate_end().plusDays(1).atStartOfDay()));
         query.select(event)
                 .where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
 

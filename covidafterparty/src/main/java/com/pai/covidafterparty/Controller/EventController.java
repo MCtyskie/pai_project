@@ -2,11 +2,13 @@ package com.pai.covidafterparty.Controller;
 
 import com.pai.covidafterparty.Model.Event;
 import com.pai.covidafterparty.Model.Invitation;
+import com.pai.covidafterparty.Model.Review;
 import com.pai.covidafterparty.Model.User;
 import com.pai.covidafterparty.Repository.EventRepositoryCustom;
 import com.pai.covidafterparty.Repository.EventRepositoryCustomImpl;
 import com.pai.covidafterparty.Service.EventService;
 import com.pai.covidafterparty.Service.InvitationService;
+import com.pai.covidafterparty.Service.ReviewService;
 import com.pai.covidafterparty.Service.UserService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,13 @@ import java.util.*;
 @RequestMapping("/api/event")
 public class EventController {
     @Autowired
-    EventService eventService;
+    private EventService eventService;
     @Autowired
-    InvitationService invitationService;
+    private InvitationService invitationService;
     @Autowired
-    UserService userService;
+    private UserService userService;
+    @Autowired
+    private ReviewService reviewService;
 
     @GetMapping("/events")
     ResponseEntity<List<Event.EventItemJSON>> getEvents() {
@@ -35,12 +39,17 @@ public class EventController {
     }
 
     @GetMapping("/details")
-    ResponseEntity<Event.EventDetailsJSON> getEventDetails(@RequestParam long eventID) {
+    ResponseEntity<Pair<Event.EventDetailsJSON, Pair<List<Review.ReviewJSON>, List<Invitation.InvitationJSON>>>> getEventDetails(@RequestParam long eventID) {
         Optional<Event> event = eventService.getEventById(eventID);
         if (event.isPresent()) {
-            return new ResponseEntity<>(event.get().getEvenDetailsJSON(), HttpStatus.OK);
+            return new ResponseEntity<>(Pair.of(
+                    event.get().getEvenDetailsJSON(),
+                    Pair.of(
+                            reviewService.getReviewForEvent(event.get().getEventID()),
+                            invitationService.getInvitationsForEvent(event.get().getEventID())
+                    )), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new Event.EventDetailsJSON(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(Pair.of(null, null), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -80,20 +89,20 @@ public class EventController {
         }
     }
 
-    /*@GetMapping("/incoming_events")
+    @GetMapping("/incoming_events")
     ResponseEntity<List<Event.EventItemJSON>> incomingEvents(Principal principal){
         List<Event.EventItemJSON> resultList = eventService.getIncomingEvents(userService.getUserByEmail(principal.getName()).get());
         return new ResponseEntity<>(resultList, HttpStatus.OK);
-    }*/
+    }
 
-    /*@GetMapping("/events_filter")
+    @GetMapping("/events_filter")
     ResponseEntity<List<Event.EventDetailsJSON>> getFilteredEvents(@RequestBody EventRepositoryCustomImpl.EventFilters eventFilters){
         try{
             return new ResponseEntity<>(eventService.getFilteredEvents(eventFilters), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         }
-    }*/
+    }
 
     @PostMapping("/createEvent")
     ResponseEntity<String> createEvent(Principal principal, @RequestBody Event.EventDetailsJSON eventDetailsJSON) {
@@ -148,6 +157,18 @@ public class EventController {
     @GetMapping("/cities")
     ResponseEntity<List<String>> getCitiesList() {
         return new ResponseEntity<>(eventService.getEventCities(), HttpStatus.OK);
+    }
+
+    @GetMapping("/events_for_owner")
+    ResponseEntity<List<Event.EventItemJSON>> getEventsForOwner(Principal principal){
+        List<Event.EventItemJSON> resultList = eventService.getEventsForOwner(userService.getUserByEmail(principal.getName()).get());
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
+    }
+
+    @GetMapping("/finished_events")
+    ResponseEntity<List<Event.EventItemJSON>> finishedEvents(Principal principal){
+        List<Event.EventItemJSON> resultList = eventService.getFinishedEvents(userService.getUserByEmail(principal.getName()).get());
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
 }
