@@ -40,4 +40,7 @@ public interface EventRepository extends CrudRepository<Event, Long> {
             "WHERE r.reviewer_id = ?1)", nativeQuery = true)
     public List<Event> findEventsToReview(long userID);
 
+    @Query(value = "SELECT * FROM event e WHERE e.event_date <= NOW() AND e.activity = 0", nativeQuery = true)
+    public List<Event> findCompletedEvents();
+
 }
