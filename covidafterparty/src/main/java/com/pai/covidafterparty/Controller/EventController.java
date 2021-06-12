@@ -98,7 +98,7 @@ public class EventController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/events_filter")
+    @PostMapping("/events_filter")
     ResponseEntity<List<Event.EventDetailsJSON>> getFilteredEvents(@RequestBody EventRepositoryCustomImpl.EventFilters eventFilters) {
         try {
             return new ResponseEntity<>(eventService.getFilteredEvents(eventFilters), HttpStatus.OK);

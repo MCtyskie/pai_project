@@ -19,8 +19,8 @@ class EventView extends React.Component {
 		this.state = {
 			isFetchingData: true,
 			cities: [],
-			selected_city: null,
-			searchByTag: null,
+			selected_city: "",
+			searchByTag: "",
 			event_start_date: null,
 			event_end_date: null,
 			event_time_start: null,
@@ -31,6 +31,7 @@ class EventView extends React.Component {
 		this.fetchAllEvents = this.fetchAllEvents.bind(this);
 		this.handleReset = this.handleReset.bind(this);
 		this.fetchFilteredEvents = this.fetchFilteredEvents.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 	}
 
 	componentDidMount() {
@@ -58,27 +59,32 @@ class EventView extends React.Component {
 	}
 
 	fetchFilteredEvents() {
-		const backend_url = "http://localhost:8081/api/event/events";
-		axios.get(backend_url, {
+		const backend_url = "http://localhost:8081/api/event/events_filter";
+		let filterData = {
+			city: this.state.selected_city,
+			tags: this.state.searchByTag,
+			date_start: this.state.event_start_date,
+			date_end: this.state.event_end_date,
+			time_start: this.state.event_time_start === null ? "" :this.state.event_time_start.toLocaleTimeString(),
+			time_end: this.state.event_time_end === null ? "" :this.state.event_time_end.toLocaleTimeString(),
+		};
+		console.log(filterData);
+		let config = {
+			method: "post",
+			url: backend_url,
 			headers: {
 				"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
+				"Content-Type": "application/json"
 			},
-			params: {
-				city: this.state.selected_city,
-				tag: this.state.searchByTag,
-				date_start: this.state.event_start_date,
-				date_end: this.state.event_end_date,
-				time_start: this.state.event_time_start.toLocaleTimeString(),
-				time_end: this.state.event_time_end.toLocaleTimeString(),
-			}
-		})
+			data: filterData
+		};
+		axios(config)
 			.then(response => {
 				this.setState({ eventList: response.data, isFetchingData: false });
 			})
 			.catch(err => {
 				console.log(err);
 				this.setState({ isFetchingData: false });
-
 			})
 	}
 
@@ -97,9 +103,18 @@ class EventView extends React.Component {
 			})
 	}
 
+	handleChange(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        this.setState({
+            [name]: value
+        });
+    }
+
 
 	handleReset() {
-		this.setState({ selected_city: null, selected_tags: null, event_start_date: null, event_end_date: null, event_time_start: null, event_time_end: null })
+		this.setState({ selected_city: "", searchByTag: "", event_start_date: null, event_end_date: null, event_time_start: null, event_time_end: null })
 	}
 
 
@@ -119,20 +134,20 @@ class EventView extends React.Component {
 									onChange={(event, newValue) => {
 										this.setState({ selected_city: newValue });
 									}}
+									getOptionSelected={(option, value) => {
+										if(value === "" || value === option) { return true; }
+									}}
 									style={{ width: "20%" }}
 									renderInput={(params) => <TextField {...params} label="City" color="primary" variant={"outlined"} />}
 								/>
-								{/* FreeSolo -> only one input as String from user */}
-								<Autocomplete
-									id="tags-filter"
-									freeSolo
-									options={[]}
-									value={this.state.searchByTag}
-									onChange={(event, newValue) => {
-										this.setState({ searchByTag: newValue });
-									}}
-									style={{ width: "20%" }}
-									renderInput={(params) => <TextField {...params} label="Tag" color="primary" variant={"outlined"} />}
+  								<TextField 
+								  id="tags-filter" 
+								  label="Tag" 
+								  variant="outlined"
+								  name="searchByTag"
+								  value={this.state.searchByTag}
+								  onChange={this.handleChange}
+								  style={{ width: "20%" }}
 								/>
 							</div>
 							<div className="row-container">
@@ -140,7 +155,7 @@ class EventView extends React.Component {
 									<KeyboardDatePicker
 										disableToolbar
 										variant="inline"
-										format="MM/dd/yyyy"
+										format="yyyy-MM-dd"
 										margin="normal"
 										id="event-date-start"
 										label="Event Date from:"
@@ -155,7 +170,7 @@ class EventView extends React.Component {
 									<KeyboardDatePicker
 										disableToolbar
 										variant="inline"
-										format="MM/dd/yyyy"
+										format="yyyy-MM-dd"
 										margin="normal"
 										id="event-date-end"
 										label="Event Date to:"

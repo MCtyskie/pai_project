@@ -31,7 +31,6 @@ class EventDetails extends React.Component {
 	}
 
 	fetchEventAllData() {
-		// TODO reformat this bcs of many shots - different functions
 		let backend_url = "http://localhost:8081/api/event/details";
 		axios.get(backend_url, {
 			headers: {
@@ -84,14 +83,14 @@ class EventDetails extends React.Component {
 		});
 		let invitations = [];
 		let acceptedInvitationsCounter = 0;
-		this.state.eventInvitations.forEach(invite =>{
-			if(invite.status === "ACCEPTED"){
+		this.state.eventInvitations.forEach(invite => {
+			if (invite.status === "ACCEPTED") {
 				acceptedInvitationsCounter += 1;
 			}
 			invitations.push(<div>Status of invitation: {invite.status} | invited user: {invite.invitedID}</div>)
 		});
 		let reviews = [];
-		this.state.eventReviews.forEach(review =>{
+		this.state.eventReviews.forEach(review => {
 			reviews.push(<div>Rate: {review.rate} | reviewer user: {review.userID} | description : {review.description}</div>)
 		});
 		let eventAddress = this.state.eventItem.city + ", " + this.state.eventItem.street + " " + this.state.eventItem.apartmentNumber;
@@ -108,7 +107,10 @@ class EventDetails extends React.Component {
 				</div>
 				<div className="row-container">
 					<div className="event-lower-info">Over 18?<Checkbox checked={this.state.eventItem.ageRestriction} disabled className="checkbox"></Checkbox></div>
-					<div className="event-lower-info">Accepted invitations: {acceptedInvitationsCounter}/{this.state.eventItem.maxGuests}</div>
+					<div className="event-lower-info">
+						{this.state.eventItem.openEvent ? <div>Open event!</div> : <div>Accepted invitations: {acceptedInvitationsCounter}/{this.state.eventItem.maxGuests}
+						</div>}
+					</div>
 					<div className="event-lower-info">{eventChips}</div>
 				</div>
 				<Button variant="primary" onClick={this.handleJoin} disabled={this.state.sentJoin}>Join Event</Button>

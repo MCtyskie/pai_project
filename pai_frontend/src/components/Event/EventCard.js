@@ -13,7 +13,7 @@ class EventCard extends React.Component {
     }
 
     componentDidMount() {
-        // console.log(this.props.item);
+        console.log(this.props.item);
     }
 
 
@@ -28,7 +28,9 @@ class EventCard extends React.Component {
                 </div>
                 <div className="row-container">
                     <div className="event-lower-info">Over 18?<Checkbox checked={this.props.item.ageRestriction} disabled className="checkbox"></Checkbox></div>
-                    <div className="event-lower-info">Invitations: {this.props.item.invitationsAccepted}/{this.props.item.maxGuests}</div>
+                    <div className="event-lower-info">
+                        {this.props.item.maxGuests === -1 ? <div>Open event!</div> : <div>Invitations : {this.props.item.invitationsAccepted}/{this.props.item.maxGuests}</div>}
+                    </div>
                     <div className="event-lower-info">{this.props.item.tags}</div>
                 </div>
             </div>
