@@ -30,4 +30,14 @@ public interface EventRepository extends CrudRepository<Event, Long> {
     @Query("SELECT DISTINCT e.city FROM Event e")
     List<String> findDistinctCities();
 
+    @Query(value = "SELECT * FROM event e " +
+            "WHERE e.event_date <= NOW() " +
+            "AND e.eventid IN " +
+            "(SELECT i.event_id FROM invitation i WHERE i.invited_user_id = ?1 " +
+            "AND i.status = 0) " +
+            "AND e.eventid NOT IN " +
+            "(SELECT r.event_id FROM review r " +
+            "WHERE r.reviewer_id = ?1)", nativeQuery = true)
+    public List<Event> findEventsToReview(long userID);
+
 }

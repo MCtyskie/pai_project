@@ -98,4 +98,9 @@ public class EventService {
         return eventRepository.findDistinctCities();
     }
 
+    public List<Event.EventItemJSON> getEventsToReview(User user) {
+        List<Event> resultList = eventRepository.findEventsToReview(user.getUserID());
+        return resultList.stream().map(e -> e.getEvenItemJSON()).collect(Collectors.toList());
+    }
+
 }

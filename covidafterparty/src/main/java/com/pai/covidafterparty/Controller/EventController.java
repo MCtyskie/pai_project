@@ -187,4 +187,10 @@ public class EventController {
         return new ResponseEntity<>(eventWithCanBeReviewed, HttpStatus.OK);
     }
 
+    @GetMapping("/events_to_review")
+    ResponseEntity<List<Event.EventItemJSON>> getEventsToReview(Principal principal){
+        List<Event.EventItemJSON> resultList = eventService.getEventsToReview(userService.getUserByEmail(principal.getName()).get());
+        return new ResponseEntity<>(resultList, HttpStatus.OK);
+    }
+
 }
