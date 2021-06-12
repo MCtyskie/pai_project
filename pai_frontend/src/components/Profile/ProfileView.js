@@ -71,7 +71,7 @@ class ProfileView extends React.Component {
 		});
 		this.state.pastEvents.forEach(eventItem => {
 			pastEventsPage.push(
-				<EventRow item={eventItem}></EventRow>
+				<EventRow item={eventItem.first}></EventRow>
 			)
 		});
 		fullPage = (

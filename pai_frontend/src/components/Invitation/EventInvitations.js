@@ -68,8 +68,6 @@ class EventInvitations extends React.Component {
     prepareEventInvitations() {
         let eventInvitations = [];
         this.state.eventList.forEach(pair => {
-            console.log(pair["first"]);
-            console.log(pair["second"]);
             let invitationsTab = []
             if (pair["second"].length !== 0) {
                 pair["second"].forEach(invitation => {

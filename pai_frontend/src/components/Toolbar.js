@@ -32,7 +32,7 @@ class Toolbar extends React.Component {
 						</NavDropdown>
 						<NavDropdown title="My Profile" id="profile">
 							<NavDropdown.Item key="3" href="/profile" title="view_profile">View Profile</NavDropdown.Item>
-							<NavDropdown.Item key="8" href="/my_events" title="my_events">My Events</NavDropdown.Item>
+							<NavDropdown.Item key="8" href="/participated_events" title="participated_events">Participated Events</NavDropdown.Item>
 						</NavDropdown>
 						<NavDropdown title="Invitations" id="invitations">
 							<NavDropdown.Item key="4" href="/my_invitations" title="view_invitations">View Invitations</NavDropdown.Item>

@@ -99,7 +99,6 @@ class UserInfo extends React.Component {
     }
 
     render() {
-        console.log(this.state.isOpen)
         return (
             <div>
                 <CustomDialog

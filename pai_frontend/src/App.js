@@ -67,7 +67,7 @@ class App extends Component {
 						<Route path="/my_invitations" component={InvitationView} />
 						<Route path="/event_invitations" component={EventInvitations} />
 						<Route path="/my_reviews" component={ReviewView} />
-						<Route path="/my_events" component={ProfileEvents} />
+						<Route path="/participated_events" component={ProfileEvents} />
 						<Route path="/manage_events" component={ManageEvents} />
 						<Route path="/issue_review" component={EventsToReview} />
 					</AuthContext.Provider>

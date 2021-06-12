@@ -4,13 +4,11 @@ import com.pai.covidafterparty.Model.Event;
 import com.pai.covidafterparty.Model.Invitation;
 import com.pai.covidafterparty.Model.Review;
 import com.pai.covidafterparty.Model.User;
-import com.pai.covidafterparty.Repository.EventRepositoryCustom;
 import com.pai.covidafterparty.Repository.EventRepositoryCustomImpl;
 import com.pai.covidafterparty.Service.EventService;
 import com.pai.covidafterparty.Service.InvitationService;
 import com.pai.covidafterparty.Service.ReviewService;
 import com.pai.covidafterparty.Service.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
@@ -18,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -163,14 +163,28 @@ public class EventController {
 
     @GetMapping("/events_for_owner")
     ResponseEntity<List<Event.EventItemJSON>> getEventsForOwner(Principal principal) {
-        List<Event.EventItemJSON> resultList = eventService.getEventsForOwner(userService.getUserByEmail(principal.getName()).get());
+        Optional<User> owner = userService.getUserByEmail(principal.getName());
+        List<Event.EventItemJSON> resultList = null;
+        if (owner.isPresent()) {
+            resultList = eventService.getEventsForOwner(owner.get());
+        }
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
     @GetMapping("/finished_events")
-    ResponseEntity<List<Event.EventItemJSON>> finishedEvents(Principal principal) {
-        List<Event.EventItemJSON> resultList = eventService.getFinishedEvents(userService.getUserByEmail(principal.getName()).get());
-        return new ResponseEntity<>(resultList, HttpStatus.OK);
+    ResponseEntity<List<Pair<Event.EventItemJSON, Boolean>>> finishedEvents(Principal principal) {
+        Optional<User> owner = userService.getUserByEmail(principal.getName());
+        List<Pair<Event.EventItemJSON, Boolean>> eventWithCanBeReviewed = new ArrayList<>();
+        List<Event.EventItemJSON> resultList;
+        if (owner.isPresent()) {
+            resultList = eventService.getFinishedEvents(owner.get());
+            resultList.forEach((event) -> {
+                Boolean canBeReviewed = reviewService.isReviewOpenForUser(owner.get().getUserID(), event.getEventID());
+                Pair<Event.EventItemJSON, Boolean> eventWithReviewFlag = Pair.of(event, canBeReviewed);
+                eventWithCanBeReviewed.add(eventWithReviewFlag);
+            });
+        }
+        return new ResponseEntity<>(eventWithCanBeReviewed, HttpStatus.OK);
     }
 
 }

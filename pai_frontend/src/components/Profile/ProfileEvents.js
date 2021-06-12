@@ -10,7 +10,7 @@ class ProfileEvents extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isFetchingData: false,
+            isFetchingData: true,
             eventList: [],
         }
         this.fetchParticipatedEvents = this.fetchParticipatedEvents.bind(this);
@@ -18,61 +18,36 @@ class ProfileEvents extends React.Component {
     }
 
     componentDidMount() {
-        console.log("User events");
         this.fetchParticipatedEvents();
     }
 
     fetchParticipatedEvents() {
-        // TODO temp endpoint name - NOT DEFINED IN BACKEND YET!
-        // const backend_url = "http://localhost:8081/api/event/participated";
-        // axios.get(backend_url, {
-        // 	headers: {
-        // 		"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
-        // 	}
-        // })
-        // 	.then(response => {
-        // 		this.setState({ eventList: response.data, isFetchingData: false });
-        // 	})
-        // 	.catch(err => {
-        // 		console.log(err);
-        // 		this.setState({ isFetchingData: false });
-        // 	})
+        const backend_url = "http://localhost:8081/api/event/finished_events";
+        axios.get(backend_url, {
+        	headers: {
+        		"Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
+        	}
+        })
+        	.then(response => {
+        		this.setState({ eventList: response.data, isFetchingData: false });
+        	})
+        	.catch(err => {
+        		console.log(err);
+        		this.setState({ isFetchingData: false });
+        	})
     }
 
     prepareEventListing() {
         let eventView = [];
-        let dummy_data = [
-            {
-                "title": "meloinferno",
-                "date": "2021-04-19 19:00:00",
-                "address": "Bydgoszcz 85 - 435 Puławska 13",
-                "ageRestriction": true,
-                "invitationsAccepted": "23",
-                "maxGuests": "100",
-                "picture": "JPG",
-                "description": "witajcie na testowym evencie melo inferno jak sie macie panowie haha",
-                "isReviewed": true,
-                "tags": [],
-            },
-            {
-                "title": "meloinferno",
-                "date": "2021-05-03 20:30:00",
-                "address": "Bydgoszcz 85 - 435 Puławska 13",
-                "ageRestriction": false,
-                "invitationsAccepted": "0",
-                "maxGuests": "100",
-                "picture": "JPG",
-                "description": "Drugi testowy event",
-                "isReviewed": false,
-                "tags": [],
-            }
-        ]
-        // for (const eventItem of this.state.eventList) {
-        for (const eventItem of dummy_data) {
+        if(this.state.eventList.length === 0){
+            return <div>No events that you participated, maybe join one?</div>
+        }
+        for (const eventWithReviewFlag of this.state.eventList) {
+            let eventItem = eventWithReviewFlag.first
             eventView.push(
                 <div>
                     <EventRow item={eventItem}></EventRow>
-                    {eventItem.isReviewed ? <Button disabled>Reviewed</Button> : <AddReview eventId={eventItem.eventId}></AddReview>}
+                    {eventWithReviewFlag.second ? <AddReview eventID={eventItem.eventID}></AddReview> : <Button disabled>Reviewed</Button>}
                     <Link to={{ pathname: "/event", query: { eventItem } }}>
                         <Button variant="primary">Check details</Button>
                     </Link>

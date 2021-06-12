@@ -15,7 +15,6 @@ class CustomDialog extends React.Component {
 
 
     render() {
-        console.log(this.props);
         return (
             <>
                 <Dialog open={this.props.isOpen} onClose={this.props.handleDialogClose} aria-labelledby="form-dialog-title">
