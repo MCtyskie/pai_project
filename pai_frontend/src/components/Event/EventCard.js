@@ -29,7 +29,7 @@ class EventCard extends React.Component {
                 <div className="row-container">
                     <div className="event-lower-info">Over 18?<Checkbox checked={this.props.item.ageRestriction} disabled className="checkbox"></Checkbox></div>
                     <div className="event-lower-info">
-                        {this.props.item.maxGuests === -1 ? <div>Open event!</div> : <div>Invitations : {this.props.item.invitationsAccepted}/{this.props.item.maxGuests}</div>}
+                        {this.props.item.maxGuests === -1 ? <div>Open event!</div> : <div>Max no. of Guests {this.props.item.maxGuests}</div>}
                     </div>
                     <div className="event-lower-info">{this.props.item.tags}</div>
                 </div>
