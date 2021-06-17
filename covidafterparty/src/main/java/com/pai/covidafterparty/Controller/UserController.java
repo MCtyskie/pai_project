@@ -79,7 +79,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/createUser")
+    @PostMapping("/create_user")//ZMIENIONE
     ResponseEntity<String> createUser(Principal principal, @RequestBody User.UserFullJSON userFullJSON) {
         User user = new User(
                 userFullJSON.getName(),
@@ -96,7 +96,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/getUserByID")
+    @GetMapping("/get_user_by_id")//ZMIENIONE
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<User.UserFullJSON> getUserByID(@RequestParam long userID) {
         Optional<User> user = userService.getUserById(userID);
@@ -107,50 +107,3 @@ public class UserController {
         }
     }
 }
-
-
-
-/*
-public ResponseEntity<String> addUser(User user){
-        User u=userRepository.findUserByEmail(user.getEmail()).get();
-        if(u==null){
-            userRepository.save(user);
-            return new ResponseEntity<>("User saved correctly", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("User already exists", HttpStatus.NOT_ACCEPTABLE);
-    }
-
-    public ResponseEntity<String> getUserById(long userID) {
-        if(userRepository.findUserByUserID(userID).isPresent()){
-            return new ResponseEntity<>("User found",HttpStatus.OK);
-        }
-        return new ResponseEntity<>("User doesn't exist",HttpStatus.NOT_FOUND);
-    }
-
-    public ResponseEntity<String> getUserByEmail(String email){
-        if(userRepository.findUserByEmail(email).isPresent()){
-            return new ResponseEntity<>("User found",HttpStatus.OK);
-        }
-        return new ResponseEntity<>("User doesn't exist",HttpStatus.NOT_FOUND);
-    }
-
-    public ResponseEntity<String> updateUser(User user){
-        User u=userRepository.findUserByEmail(user.getEmail()).get();
-        if(u==null){
-            userRepository.delete(user);
-            return new ResponseEntity<>("User updated correctly", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("User doesn't exist", HttpStatus.NOT_ACCEPTABLE);
-    }
-
-    public String deleteUser(long userID){
-        Optional<User> selectedUser=userRepository.findUserByUserID(userID);
-        if(selectedUser.isPresent()){
-            User user=selectedUser.get();
-            String message=String.format("User with id: %d deleted",user.getUserID());
-            userRepository.delete(user);
-            return message;
-        }
-        return "";
-    }
- */

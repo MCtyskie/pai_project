@@ -98,7 +98,7 @@ public class EventController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/events_filter")
+    @GetMapping("/events_filter")//ZMIENIONO
     ResponseEntity<List<Event.EventDetailsJSON>> getFilteredEvents(@RequestBody EventRepositoryCustomImpl.EventFilters eventFilters) {
         try {
             return new ResponseEntity<>(eventService.getFilteredEvents(eventFilters), HttpStatus.OK);
@@ -107,7 +107,7 @@ public class EventController {
         }
     }
 
-    @PostMapping("/createEvent")
+    @PostMapping("/create_event")//ZMIENIONE
     ResponseEntity<String> createEvent(Principal principal, @RequestBody Event.EventDetailsJSON eventDetailsJSON) {
         Optional<User> owner = userService.getUserByEmail(principal.getName());
         if (owner.isPresent()) {
@@ -139,7 +139,7 @@ public class EventController {
 
     }
 
-    @GetMapping("manageEvents")
+    @GetMapping("manage_events")//ZMIENIONE
     ResponseEntity<List<Pair<Event.EventItemJSON, List<Invitation.InvitationJSON>>>> getUserEventsWithInvitations(Principal principal) {
         Optional<User> owner = userService.getUserByEmail(principal.getName());
         List<Pair<Event.EventItemJSON, List<Invitation.InvitationJSON>>> eventsWithInvitations = new ArrayList<>();

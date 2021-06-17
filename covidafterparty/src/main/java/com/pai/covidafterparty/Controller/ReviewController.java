@@ -30,7 +30,7 @@ public class ReviewController {
     private EventService eventService;
 
 
-    @PostMapping("/addReview")
+    @PostMapping("/add_review")//ZMIENIONE
     ResponseEntity<String> addReview(Principal principal, @RequestBody Review.ReviewJSON reviewJSON) {
         Optional<User> owner = userService.getUserByEmail(principal.getName());
         Optional<Event> event = eventService.getEventById(reviewJSON.getEventID());
@@ -50,7 +50,7 @@ public class ReviewController {
         return new ResponseEntity<>("Review not added, no eventID or ownerID!", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/getReviews")
+    @GetMapping("/get_reviews")//ZMIENIONE
     ResponseEntity<List<Review.ReviewJSON>> getReviewsForUser(Principal principal) {
         Optional<User> user = userService.getUserByEmail(principal.getName());
         if (user.isPresent()) {
@@ -61,7 +61,7 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/getReviewByID")
+    @GetMapping("/get_review_by_id")//ZMIENIONE
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<Review.ReviewJSON> getReviewByID(@RequestParam long reviewID) {
         Optional<Review> review = reviewService.getReviewById(reviewID);
@@ -104,7 +104,7 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/reviewForEvent")
+    @GetMapping("/review_for_event")//ZMIENIONE
     ResponseEntity<List<Review.ReviewJSON>> getReviewForEvent(@RequestParam long eventID) {
         try {
             List<Review.ReviewJSON> result = reviewService.getReviewForEvent(eventID);
@@ -114,7 +114,7 @@ public class ReviewController {
         }
     }
 
-    @GetMapping("/reviewOpenForUserCheck")
+    @GetMapping("/review_check")//ZMIENIONE
     ResponseEntity<Boolean> isReviewOpenForUser(Principal principal, @RequestParam long eventID) {
         Optional<User> optUser = userService.getUserByEmail(principal.getName());
         if (optUser.isPresent()) {
