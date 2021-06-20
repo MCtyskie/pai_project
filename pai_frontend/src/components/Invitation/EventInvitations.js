@@ -49,7 +49,7 @@ class EventInvitations extends React.Component {
 
 
     fetchOrganisedEvents() {
-        const backend_url = "http://localhost:8081/api/event/manageEvents";
+        const backend_url = "http://localhost:8081/api/event/manage_events";
         axios.get(backend_url, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
