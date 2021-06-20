@@ -35,7 +35,7 @@ class AddReview extends React.Component {
     }
 
     fetchIfUserCanAddReview() {
-        const backend_url = "http://localhost:8081/api/review/reviewOpenForUserCheck";
+        const backend_url = "http://localhost:8081/api/review/review_check";
         axios.get(backend_url, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,
@@ -73,7 +73,7 @@ class AddReview extends React.Component {
                 rate: this.state.rating,
                 description: this.state.comment,
             }
-            const backend_url = "http://localhost:8081/api/review/addReview";
+            const backend_url = "http://localhost:8081/api/review/add";
             axios.post(backend_url, data, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,

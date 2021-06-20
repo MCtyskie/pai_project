@@ -79,7 +79,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/create_user")//ZMIENIONE
+    @PostMapping("/create_user")
     ResponseEntity<String> createUser(Principal principal, @RequestBody User.UserFullJSON userFullJSON) {
         User user = new User(
                 userFullJSON.getName(),
@@ -96,7 +96,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/get_user_by_id")//ZMIENIONE
+    @GetMapping("/get_user_by_id")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<User.UserFullJSON> getUserByID(@RequestParam long userID) {
         Optional<User> user = userService.getUserById(userID);

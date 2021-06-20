@@ -18,7 +18,7 @@ class InvitationView extends React.Component {
     }
 
     getUserInvitations() {
-        const backend_url = "http://localhost:8081/api/invitation/invPerInvited";
+        const backend_url = "http://localhost:8081/api/invitation/inv_per_invited";
         axios.get(backend_url, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem('token').substring(1).slice(0, -1)}`,

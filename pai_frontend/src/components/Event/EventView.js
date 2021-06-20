@@ -68,7 +68,6 @@ class EventView extends React.Component {
 			time_start: this.state.event_time_start === null ? "" :this.state.event_time_start.toLocaleTimeString(),
 			time_end: this.state.event_time_end === null ? "" :this.state.event_time_end.toLocaleTimeString(),
 		};
-		console.log(filterData);
 		let config = {
 			method: "post",
 			url: backend_url,

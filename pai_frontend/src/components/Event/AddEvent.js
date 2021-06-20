@@ -72,7 +72,7 @@ class AddEvent extends React.Component {
         }
         else {
             this.setState({ validated: true });
-            const backend_url = "http://localhost:8081/api/event/createEvent";
+            const backend_url = "http://localhost:8081/api/event/create_event";
             let eventDateTime = this.state.date + "T" + this.state.time;
             let tagsString = this.state.tags.join(",");
             let formData = {

@@ -72,7 +72,7 @@ public class InvitationController {
         }
     }
 
-    @GetMapping("/inv_fo_event")//ZMIENIONE
+    @GetMapping("/event_invitations")
     ResponseEntity<List<Invitation.InvitationJSON>> getInvitationsForEvent(@RequestParam long eventID) {
         try {
             List<Invitation.InvitationJSON> result = invitationService.getInvitationsForEvent(eventID);
@@ -112,17 +112,17 @@ public class InvitationController {
         return new ResponseEntity<>(response, status);
     }
 
-    @GetMapping("/inv_per_event")//ZMIENIONE
+    @GetMapping("/inv_per_event")
     ResponseEntity<List<Invitation.InvitationJSON>> invPerEvent(Principal principal, @RequestParam long eventID) {
         return new ResponseEntity<>(invitationService.invPerEvent(eventID), HttpStatus.OK);
     }
 
-    @GetMapping("/inv_per_invited")//ZMIENIONE
+    @GetMapping("/inv_per_invited")
     ResponseEntity<List<Invitation.InvitationJSON>> invPerInvited(Principal principal) {
         return new ResponseEntity<>(invitationService.invPerInvited(principal.getName()), HttpStatus.OK);
     }
 
-    @GetMapping("/inv_per_inviter")//ZMIENIONE
+    @GetMapping("/inv_per_inviter")
     ResponseEntity<List<Invitation.InvitationJSON>> invPerInviter(Principal principal) {
         return new ResponseEntity<>(invitationService.invPerInviter(principal.getName()), HttpStatus.OK);
     }

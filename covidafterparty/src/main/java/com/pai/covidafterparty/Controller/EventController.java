@@ -98,7 +98,7 @@ public class EventController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/events_filter")//ZMIENIONO
+    @PostMapping("/events_filter")
     ResponseEntity<List<Event.EventDetailsJSON>> getFilteredEvents(@RequestBody EventRepositoryCustomImpl.EventFilters eventFilters) {
         try {
             return new ResponseEntity<>(eventService.getFilteredEvents(eventFilters), HttpStatus.OK);
@@ -107,7 +107,7 @@ public class EventController {
         }
     }
 
-    @PostMapping("/create_event")//ZMIENIONE
+    @PostMapping("/create_event")
     ResponseEntity<String> createEvent(Principal principal, @RequestBody Event.EventDetailsJSON eventDetailsJSON) {
         Optional<User> owner = userService.getUserByEmail(principal.getName());
         if (owner.isPresent()) {
@@ -139,7 +139,7 @@ public class EventController {
 
     }
 
-    @GetMapping("manage_events")//ZMIENIONE
+    @GetMapping("manage_events")
     ResponseEntity<List<Pair<Event.EventItemJSON, List<Invitation.InvitationJSON>>>> getUserEventsWithInvitations(Principal principal) {
         Optional<User> owner = userService.getUserByEmail(principal.getName());
         List<Pair<Event.EventItemJSON, List<Invitation.InvitationJSON>>> eventsWithInvitations = new ArrayList<>();
@@ -188,7 +188,7 @@ public class EventController {
     }
 
     @GetMapping("/events_to_review")
-    ResponseEntity<List<Event.EventItemJSON>> getEventsToReview(Principal principal){
+    ResponseEntity<List<Event.EventItemJSON>> getEventsToReview(Principal principal) {
         List<Event.EventItemJSON> resultList = eventService.getEventsToReview(userService.getUserByEmail(principal.getName()).get());
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
