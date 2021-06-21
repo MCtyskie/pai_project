@@ -22,6 +22,7 @@ public class User {
     private String name;
     private String lastName;
     private String email;
+    @JsonIgnore
     private String password;
     private LocalDate birthdate;
     private String city;
@@ -45,10 +46,10 @@ public class User {
     private List<Event> moderating;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="users_to_roles",
-            joinColumns = @JoinColumn(name="userID"),
-            inverseJoinColumns = @JoinColumn(name="roleID"))
-    private Set<Role> roles=new HashSet<>();
+    @JoinTable(name = "users_to_roles",
+            joinColumns = @JoinColumn(name = "userID"),
+            inverseJoinColumns = @JoinColumn(name = "roleID"))
+    private Set<Role> roles = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "reviewer")
@@ -64,17 +65,19 @@ public class User {
         this.phone = phone;
     }
 
-    public UserProfileJSON getUserProfileJSON(){
+    @JsonIgnore
+    public UserProfileJSON getUserProfileJSON() {
         return new UserProfileJSON(name, lastName, email, city, phone, userID);
     }
 
-    public UserFullJSON getUserFullJSON(){
+    @JsonIgnore
+    public UserFullJSON getUserFullJSON() {
         return new UserFullJSON(userID, name, lastName, email, password, birthdate, city, phone, activeAccount);
     }
 
     @Getter
     @Setter
-    public static class UserFullJSON{
+    public static class UserFullJSON {
         private long userID;
         private String name;
         private String lastName;
@@ -97,7 +100,7 @@ public class User {
             this.activeAccount = activeAccount;
         }
 
-        public UserFullJSON(){
+        public UserFullJSON() {
             this.userID = -1;
             this.name = null;
             this.lastName = null;
@@ -112,7 +115,7 @@ public class User {
 
     @Getter
     @Setter
-    public static class UserProfileJSON{
+    public static class UserProfileJSON {
         private long userID;
         private String name;
         private String lastName;
@@ -129,7 +132,7 @@ public class User {
             this.phone = phone;
         }
 
-        public UserProfileJSON(){
+        public UserProfileJSON() {
             this.name = null;
             this.lastName = null;
             this.email = null;

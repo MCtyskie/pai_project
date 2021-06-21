@@ -57,9 +57,11 @@ class UsersView extends React.Component {
                                 <Button variant="primary">
                                     Edit
                                 </Button>
+                                <Button variant="secondary">
+                                    Make Admin
+                                </Button>
                                 {/* TODO somekind of alert & confirmation? */}
                                 <Button variant="danger">
-                                    
                                     Delete
                                 </Button>
                                 </tr>
